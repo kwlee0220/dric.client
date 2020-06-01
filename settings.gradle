@@ -1,0 +1,6 @@
+rootProject.name = 'dric.client'
+
+['utils'].each {
+	include ":$it"
+	project(":$it").projectDir = file("../../common/$it")
+}

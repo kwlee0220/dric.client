@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "dric.proto";
+
+package dric.video;
+
+message ErrorProto {
+	string code = 1;
+	oneof optional_details {
+		string details = 2;
+	}
+}
+
+message FrameLocatorProto {
+	int64 ts = 1;
+	int64 seqno = 2;
+}
+
+message ImageCoordinateProto {
+	int32 x = 1;
+	int32 y = 2;
+}
+
+message Size2iProto {
+	int32 width = 1;
+	int32 height = 2;
+}
+
+message BoundingBoxProto {
+	Size2iProto start = 1;
+	ImageCoordinateProto size = 2;
+}
+
+message Wgs84CoordinateProto {
+	double lon = 1;		// 경도
+	double lat = 2;		// 위도
+}
+
+
+/////////////////////////////////////////////////////////////////
+// Basic request & response protos
+/////////////////////////////////////////////////////////////////
+message VoidProto { }
+message VoidResponse {
+	oneof either {
+		VoidProto void = 1;
+		ErrorProto error = 2;
+	}
+}
+
+service DrICVideoServer {
+	rpc getCameraFrame(CameraFrameRequest) returns (CameraFrameResponse);
+	rpc queryFrames(CameraFrameRangeRequest) returns (stream CameraFrameResponse);
+}
+
+message CameraFrame {
+	string camera_id = 1;		// 영상을 취득한 카메라 식별자
+	int64 ts = 2;				// 이미지 취득 시각
+	bytes image = 3;			// 영상 데이터
+}
+
+message CameraFrameRequest {
+	string camera_id = 1;
+	int64 ts = 2;
+}
+
+message CameraFrameResponse {
+	oneof either {
+		CameraFrame frame = 1;
+		ErrorProto error = 2;
+	}
+}
+
+message CameraFrameRangeRequest {
+	string camera_id = 1;				// target camera id
+	int64 start_ts = 2;					// timestamp of the start frame
+	int64 period = 3;					// period
+}
+
+service DrICPlatform {
+	rpc getChannel(ChannelRequest) returns (ChannelResponse);
+}
+
+message Channel {
+	string endpoint = 1;
+}
+
+message ChannelRequest {
+	string topic = 1;
+}
+
+message ChannelResponse {
+	oneof either {
+		Channel channel = 1;
+		ErrorProto error = 2;
+	}
+}
+
+message BBoxTrackProto {
+	string camera_id = 1;				// 영상을 취득한 카메라 식별자
+	string object_id = 2;				// 검출된 물체의 지역 식별자
+	BoundingBoxProto bbox = 3;			// 검출된 물체의 BBox
+	int32 heading = 4;					// 검출된 물체의 방향
+	FrameLocatorProto frame_loc = 5;	// 검출에 활용된 이미지 프레임 위치
+}
+
+message SCObjectTrackProto {
+	string camera_id = 1;				// 영상을 취득한 카메라 식별자
+	string object_id = 2;				// 검출된 물체의 지역 식별자
+	Wgs84CoordinateProto loc = 3;		// 검출된 물체의 위경도 좌표
+	int32 azimuth = 4;					// 검출된 물체의 방위각
+	FrameLocatorProto frame_loc = 5;	// 검출에 활용된 이미지 프레임 위치
+}
+
+message SimpleActionProto {
+	string camera_id = 1;				// 영상을 취득한 카메라 식별자
+	string object_id = 2;				// 검출된 물체의 지역 식별자
+	Wgs84CoordinateProto loc = 3;		// 검출된 물체의 위경도 좌표
+	int32 azimuth = 4;					// 검출된 물체의 방위각
+	FrameLocatorProto frame_loc = 5;	// 검출에 활용된 이미지 프레임 위치
+	string simple_action_class = 6;		// 단순 행위 클래스 식별자
+}
