@@ -1,8 +1,9 @@
 package dric.grpc;
 
+import com.google.protobuf.Empty;
+
+import dric.proto.EmptyResponse;
 import dric.proto.ErrorProto;
-import dric.proto.VoidProto;
-import dric.proto.VoidResponse;
 import io.grpc.stub.StreamObserver;
 import utils.Throwables;
 import utils.Utilities;
@@ -17,12 +18,12 @@ public class PBUtils {
 		throw new AssertionError("Should not be called: " + getClass());
 	}
 	
-	public static final VoidProto VOID = VoidProto.newBuilder().build();
-	private static final VoidResponse VOID_RESPONSE = VoidResponse.newBuilder()
+	public static final Empty VOID = Empty.newBuilder().build(); 
+	private static final EmptyResponse VOID_RESPONSE = EmptyResponse.newBuilder()
 																	.setVoid(VOID)
 																	.build();
 	
-	public static void handle(VoidResponse resp) {
+	public static void handle(EmptyResponse resp) {
 		switch ( resp.getEitherCase() ) {
 			case VOID:
 				return;
@@ -34,15 +35,13 @@ public class PBUtils {
 	}
 	
 	public static void replyVoid(CheckedRunnable runnable,
-									StreamObserver<VoidResponse> response) {
+									StreamObserver<EmptyResponse> response) {
 		try {
 			runnable.run();
-			response.onNext(VoidResponse.newBuilder()
-										.setVoid(VOID)
-										.build());
+			response.onNext(VOID_RESPONSE);
 		}
 		catch ( Throwable e ) {
-			response.onNext(VoidResponse.newBuilder()
+			response.onNext(EmptyResponse.newBuilder()
 										.setError(PBUtils.toErrorProto(e))
 										.build());
 		}

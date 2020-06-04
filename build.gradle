@@ -63,6 +63,7 @@ repositories {
 }
 
 ext.opencv_version = '430'
+ext.snakeyaml_version = '1.26'
 ext.grpc_version = '1.16.1'
 ext.protobuf_version = '3.5.1'
 ext.avro_version = '1.9.2'
@@ -76,16 +77,20 @@ dependencies {
 	
 	// Avro
 	api "org.apache.avro:avro:${avro_version}"
+	implementation "org.apache.avro:avro-compiler:${avro_version}"
 	
 	// Paho MQTT
 	implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:${paho_version}"
 	
 	// grpc
 	api "com.google.protobuf:protobuf-java:${protobuf_version}"
-	api "com.google.protobuf:protobuf-java-util:${protobuf_version}"
-	api "io.grpc:grpc-stub:${grpc_version}"
-	api "io.grpc:grpc-netty-shaded:${grpc_version}"
+	implementation "com.google.protobuf:protobuf-java-util:${protobuf_version}"
+	implementation "io.grpc:grpc-stub:${grpc_version}"
+	implementation "io.grpc:grpc-netty-shaded:${grpc_version}"
 	implementation "io.grpc:grpc-protobuf:${grpc_version}"
+	
+	// yaml
+	implementation group: 'org.yaml', name: 'snakeyaml', version: "${snakeyaml_version}"
 }
 
 task sourceJar(type: Jar) {

@@ -1,0 +1,51 @@
+@namespace("dric")
+protocol ImageCoordinate {
+	record Size2i {
+		int width;
+		int height;
+	}
+	
+	record ImageCoordinate {
+		int x;
+		int y;
+	}
+	
+	record Coordinate {
+		double x;
+		double y;
+	}
+	
+	record BoundingBox {
+		ImageCoordinate tl;
+		ImageCoordinate br;
+	}
+	
+	record Pose3D {
+		Coordinate loc;
+		float azimuth;
+		float yaw;
+		float pitch;
+		float roll;
+	}
+	
+	record CameraFrame {
+		string camera_id;
+		bytes image;
+		long ts;
+	}
+	
+	record ObjectBBoxTrack {
+		string camera_id;		// 영상을 취득한 카메라 식별자
+		string luid;			// 검출된 물체의 지역 식별자
+		BoundingBox bbox;		// 검출된 물체의 BBox
+		int heading;			// 검출된 물체의 방향
+		long ts;				// 검출에 활용된 이미지 캡쳐 시각
+	}
+	
+	record Object3DTrack {
+		string camera_id;		// 영상을 취득한 카메라 식별자
+		string object_id;		// 검출된 물체의 지역 식별자
+		Pose3D pose;			// 검출된 물체의 위경도 좌표
+		long ts;				// 검출에 활용된 이미지 캡쳐 시각
+	}
+}

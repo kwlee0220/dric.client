@@ -4,8 +4,8 @@ import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.reactivestreams.Publisher;
 
+import dric.DricClientConfig;
 import utils.func.Lazy;
 
 /**
@@ -14,21 +14,21 @@ import utils.func.Lazy;
  */
 public class DrICClient {
 	private final String m_id;
-	private final DrICClientConfig m_config;
-	private final Lazy<IMqttClient> m_mqttClient = Lazy.of(this::getMqttClient);
+	private final DricClientConfig m_config;
+	private final Lazy<IMqttClient> m_mqttClient = Lazy.of(this::createMqttClient);
 	
-	public DrICClient(String id, DrICClientConfig config) {
+	public DrICClient(String id, DricClientConfig config) {
 		m_id = id;
 		m_config = config;
 	}
 	
-	public Publisher getPublisher() {
-		return null;
+	public IMqttClient getIMqttClient() {
+		return m_mqttClient.get();
 	}
 	
-	private IMqttClient getMqttClient() {
+	private IMqttClient createMqttClient() {
 		try {
-			IMqttClient client = new MqttClient(m_config.messageBrokerUrl(), m_id);
+			IMqttClient client = new MqttClient(m_config.mqttConfig().brokerUrl(), m_id);
 			
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setAutomaticReconnect(true);

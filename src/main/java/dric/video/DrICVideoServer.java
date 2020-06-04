@@ -1,6 +1,6 @@
 package dric.video;
 
-import dric.proto.CameraFrame;
+import dric.type.CameraFrame;
 import utils.stream.FStream;
 
 /**

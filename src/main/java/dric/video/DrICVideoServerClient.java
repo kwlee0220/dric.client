@@ -3,12 +3,13 @@ package dric.video;
 import java.io.IOException;
 
 import dric.grpc.PBUtils;
-import dric.proto.CameraFrame;
+import dric.proto.CameraFrameRangeRequest;
 import dric.proto.CameraFrameRequest;
 import dric.proto.CameraFrameResponse;
 import dric.proto.DrICVideoServerGrpc;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerBlockingStub;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerStub;
+import dric.type.CameraFrame;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
@@ -42,6 +43,17 @@ public class DrICVideoServerClient implements DrICVideoServer {
 
 		m_server = ServerBuilder.forPort(0).build();
 		m_server.start();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				disconnect();
+			}
+		});
+	}
+	
+	public void disconnect() {
+		m_channel.shutdown();
+		m_server.shutdown();
 	}
 
 	@Override
@@ -55,7 +67,7 @@ public class DrICVideoServerClient implements DrICVideoServer {
 		CameraFrameResponse resp = m_blockingStub.getCameraFrame(req);
 		switch ( resp.getEitherCase() ) {
 			case FRAME:
-				return resp.getFrame();
+				return CameraFrame.fromProto(resp.getFrame());
 			case ERROR:
 				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
 			default:
@@ -65,7 +77,25 @@ public class DrICVideoServerClient implements DrICVideoServer {
 
 	@Override
 	public FStream<CameraFrame> queryCameraFrames(String cameraId, long start, long stop)
-			throws DrICVideoException {
-		return null;
+		throws DrICVideoException {
+		CameraFrameRangeRequest req = CameraFrameRangeRequest.newBuilder()
+															.setCameraId(cameraId)
+															.setStartTs(start)
+															.setStopTs(stop)
+															.build();
+		
+		return FStream.from(m_blockingStub.queryCameraFrames(req))
+						.map(this::toCameraFrame);
+	}
+	
+	private CameraFrame toCameraFrame(CameraFrameResponse resp) {
+		switch ( resp.getEitherCase() ) {
+			case FRAME:
+				return CameraFrame.fromProto(resp.getFrame());
+			case ERROR:
+				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
+			default:
+				throw new AssertionError();
+		}
 	}
 }
