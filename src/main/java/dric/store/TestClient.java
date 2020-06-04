@@ -4,7 +4,8 @@ import java.io.File;
 
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 
-import dric.DricClientConfig;
+import dric.ClientConfig;
+import dric.DrICClient;
 import dric.type.CameraFrame;
 
 /**
@@ -13,10 +14,10 @@ import dric.type.CameraFrame;
  */
 public class TestClient {
 	public static final void main(String... args) throws Exception {
-		DricClientConfig config = DricClientConfig.from(new File("configs/dric_client.yaml"));
+		ClientConfig config = ClientConfig.from(new File("configs/dric_client.yaml"));
 		
 		SchemaRegistry reg = SchemaRegistry.get();
-		DrICClient client = new DrICClient("test", config);
+		DrICClient client = DrICClient.connect("test", config);
 		IMqttClient mqtt = client.getIMqttClient();
 		TopicCameraFrame topic = new TopicCameraFrame(mqtt);
 		

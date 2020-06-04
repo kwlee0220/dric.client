@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
+import dric.proto.ServiceEndPoint;
 import utils.func.FOption;
 import utils.func.Funcs;
 import utils.jdbc.JdbcProcessor;
@@ -16,50 +17,34 @@ import utils.jdbc.JdbcProcessor;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class DricClientConfig {
-	private final MqttConfig m_mqttConfig;
-	private final VideoServerConfig m_videoConfig;
-	private final DataStoreConfig m_tailConfig;
+public class ClientConfig {
+	private final PlatformConfig m_platformConfig;
 	private final FOption<File> m_openCvDllFile;
 	
-	private DricClientConfig(MqttConfig mqttConfig, VideoServerConfig videoConfig,
-								DataStoreConfig tailConfig, FOption<File> openCvDllFile) {
-		m_mqttConfig = mqttConfig;
-		m_videoConfig = videoConfig;
-		m_tailConfig = tailConfig;
+	private ClientConfig(PlatformConfig platformConfig, FOption<File> openCvDllFile) {
+		m_platformConfig = platformConfig;
 		m_openCvDllFile = openCvDllFile;
 	}
 	
-	public static DricClientConfig from(File configFile) throws FileNotFoundException, IOException {
+	public static ClientConfig from(File configFile) throws FileNotFoundException, IOException {
 		Yaml yaml = new Yaml();
 		try ( FileReader reader = new FileReader(configFile) ) {
 			@SuppressWarnings("unchecked")
 			Map<String,Object> props = (Map<String,Object>)yaml.load(reader);
-			return DricClientConfig.from(props);
+			return ClientConfig.from(props);
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static DricClientConfig from(Map<String,Object> config) {
-		MqttConfig cameraConfig = MqttConfig.from(getSubConfig(config, "mqtt"));
-		VideoServerConfig videoServerConfig = VideoServerConfig.from(getSubConfig(config, "video_server"));
-		DataStoreConfig dataStoreConfig = DataStoreConfig.from(getSubConfig(config, "dric_data"));
+	public static ClientConfig from(Map<String,Object> config) {
+		PlatformConfig platformConfig = PlatformConfig.from(getSubConfig(config, "dric_platform"));
 		File dllFile = Funcs.applyIfNotNull((String)config.get("opencv_dll"), File::new);
 
-		return new DricClientConfig(cameraConfig, videoServerConfig, dataStoreConfig,
-									FOption.ofNullable(dllFile));
+		return new ClientConfig(platformConfig, FOption.ofNullable(dllFile));
 	}
 	
-	public MqttConfig mqttConfig() {
-		return m_mqttConfig;
-	}
-	
-	public VideoServerConfig videoServerConfig() {
-		return m_videoConfig;
-	}
-	
-	public DataStoreConfig dataStoreConfig() {
-		return m_tailConfig;
+	public ServiceEndPoint dricPlatformEndPoint() {
+		return m_platformConfig.m_endPoint;
 	}
 	
 	public FOption<File> openCvDllFile() {
@@ -112,26 +97,20 @@ public class DricClientConfig {
 			return m_port;
 		}
 	}
-
-	public static class DataStoreConfig {
-		private final String m_host;
-		private final int m_port;
+	
+	public static class PlatformConfig {
+		private final ServiceEndPoint m_endPoint;
 		
-		private DataStoreConfig(String host, int height) {
-			m_host = host;
-			m_port = height;
+		private PlatformConfig(ServiceEndPoint sep) {
+			m_endPoint = sep;
 		}
 		
-		private static DataStoreConfig from(Map<String,Object> props) {
-			return new DataStoreConfig(props.get("host").toString(), (int)props.get("port"));
+		public static PlatformConfig from(Map<String,Object> props) {
+			return new PlatformConfig(parseEndPoint(props));
 		}
 		
-		public String host() {
-			return m_host;
-		}
-		
-		public int port() {
-			return m_port;
+		public ServiceEndPoint getServiceEndPoint() {
+			return m_endPoint;
 		}
 	}
 
@@ -165,5 +144,15 @@ public class DricClientConfig {
 		public JdbcProcessor getJdbcProcessor() {
 			return JdbcProcessor.create(m_system, m_host, m_port, m_user, m_passwd, m_dbName);
 		}
+	}
+	
+	private static ServiceEndPoint parseEndPoint(Map<String,Object> props) {
+		String host = Funcs.applyIfNotNull(props.get("host"), Object::toString, "localhost"); 
+		int port = FOption.ofNullable(props.get("port"))
+							.map(Object::toString)
+							.map(Integer::parseInt)
+							.getOrElse(-1);
+		
+		return ServiceEndPoint.newBuilder().setHost(host).setPort(port).build();
 	}
 }

@@ -31,6 +31,12 @@ message ServiceEndPoint {
 	string host = 1;
 	int32 port = 2;
 }
+message ServiceEndPointResponse {
+	oneof either {
+		ServiceEndPoint end_point = 1;
+		ErrorProto error = 2;
+	}
+}
 
 message ImageCoordinateProto {
 	int32 x = 1;
@@ -98,8 +104,9 @@ message CameraFrameRangeRequest {
 
 
 service DrICPlatform {
-	rpc getVideoServerEndPoint(google.protobuf.Empty) returns (ServiceEndPoint);
-	rpc getDataStoreEndPoint(google.protobuf.Empty) returns (ServiceEndPoint);
+	rpc getDataStoreEndPoint(google.protobuf.Empty) returns (ServiceEndPointResponse);
+	rpc getTopicServerEndPoint(google.protobuf.Empty) returns (ServiceEndPointResponse);
+	rpc getVideoServerEndPoint(google.protobuf.Empty) returns (ServiceEndPointResponse);
 }
 
 service DrICDataStore {

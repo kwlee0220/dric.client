@@ -10,7 +10,9 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
+		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.7'
 		classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+		classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'
 	}
 }
 
@@ -19,18 +21,6 @@ version = '20.05.15'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 [compileJava,compileTestJava]*.options*.encoding = 'UTF-8'
-
-buildscript {
-	repositories {
-		mavenLocal()
-		jcenter()
-	}
-	dependencies {
-		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.7'
-		classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
-		classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'
-	}
-}
 
 protobuf {
 	protoc {
@@ -44,6 +34,15 @@ protobuf {
 	generateProtoTasks {
 		all()*.plugins {
 			grpc {}
+		}
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs 'build/generated/source/proto/main/grpc'
+			srcDirs 'build/generated/source/proto/main/java'
 		}
 	}
 }
