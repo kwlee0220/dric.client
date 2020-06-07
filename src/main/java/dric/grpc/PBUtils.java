@@ -1,6 +1,7 @@
 package dric.grpc;
 
 import com.google.protobuf.Empty;
+import com.google.protobuf.StringValue;
 
 import dric.proto.EmptyResponse;
 import dric.proto.ErrorProto;
@@ -79,5 +80,9 @@ public class PBUtils {
 		catch ( Exception e ) {
 			throw new DrICGrpcException("fails to load exception object: " + proto);
 		}
+	}
+	
+	public static StringValue toStringValue(String str) {
+		return StringValue.newBuilder().setValue(str).build();
 	}
 }

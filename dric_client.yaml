@@ -2,7 +2,4 @@ dric_platform:
     host: localhost
     port: 12345
 
-mqtt:
-    broker: tcp://localhost:1883
-
 opencv_dll: C:/development/dric/dric.video/lib/opencv_java430.dll

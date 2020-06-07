@@ -27,16 +27,60 @@ message EmptyResponse {
 	}
 }
 
-message ServiceEndPoint {
+message EndPoint {
 	string host = 1;
 	int32 port = 2;
 }
-message ServiceEndPointResponse {
-	oneof either {
-		ServiceEndPoint end_point = 1;
-		ErrorProto error = 2;
-	}
+
+message JdbcEndPoint {
+	string system = 1;
+	string host = 2;
+	int32 port = 3;
+	string db_name = 4;
+	string user = 5;
+	string password = 6;
 }
+
+
+/////////////////////////////////////////////////////////////////
+// DrIC Platform request & response protos
+/////////////////////////////////////////////////////////////////
+
+service DrICPlatform {
+	rpc getServiceEndPoint(google.protobuf.StringValue) returns (EndPoint);
+}
+
+
+
+/////////////////////////////////////////////////////////////////
+// DrIC DataStore request & response protos
+/////////////////////////////////////////////////////////////////
+
+service DrICDataStore {
+}
+
+
+
+/////////////////////////////////////////////////////////////////
+// DrIC VideoServer request & response protos
+/////////////////////////////////////////////////////////////////
+
+service DrICVideoServer {
+	rpc addCamera(CameraInfo) returns (google.protobuf.Empty);
+	rpc removeCamera(google.protobuf.StringValue) returns (google.protobuf.Empty);
+	rpc getCamera(google.protobuf.StringValue) returns (CameraInfo);
+	rpc getCameraAll(google.protobuf.Empty) returns (stream CameraInfo);
+	
+	rpc getCameraFrame(CameraFrameRequest) returns (CameraFrameResponse);
+	rpc queryCameraFrames(CameraFrameRangeRequest) returns (stream CameraFrameResponse);
+}
+
+message CameraInfo {
+	string id = 1;
+	string rtsp_url = 2;
+}
+
+
 
 message ImageCoordinateProto {
 	int32 x = 1;
@@ -79,11 +123,6 @@ message ObjectTrackProto {
 	int64 ts = 5;					// 이미지 취득 시각
 }
 
-service DrICVideoServer {
-	rpc getCameraFrame(CameraFrameRequest) returns (CameraFrameResponse);
-	rpc queryCameraFrames(CameraFrameRangeRequest) returns (stream CameraFrameResponse);
-}
-
 message CameraFrameRequest {
 	string camera_id = 1;
 	int64 ts = 2;
@@ -100,14 +139,4 @@ message CameraFrameRangeRequest {
 	string camera_id = 1;				// target camera id
 	int64 start_ts = 2;					// timestamp of the start frame
 	int64 stop_ts = 3;					// timestamp of the last frame
-}
-
-
-service DrICPlatform {
-	rpc getDataStoreEndPoint(google.protobuf.Empty) returns (ServiceEndPointResponse);
-	rpc getTopicServerEndPoint(google.protobuf.Empty) returns (ServiceEndPointResponse);
-	rpc getVideoServerEndPoint(google.protobuf.Empty) returns (ServiceEndPointResponse);
-}
-
-service DrICDataStore {
 }

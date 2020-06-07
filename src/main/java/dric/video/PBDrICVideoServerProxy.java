@@ -1,19 +1,16 @@
 package dric.video;
 
-import java.io.IOException;
-
 import dric.grpc.PBUtils;
 import dric.proto.CameraFrameRangeRequest;
 import dric.proto.CameraFrameRequest;
 import dric.proto.CameraFrameResponse;
+import dric.proto.CameraInfo;
 import dric.proto.DrICVideoServerGrpc;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerBlockingStub;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerStub;
 import dric.type.CameraFrame;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
+import io.grpc.StatusRuntimeException;
 import utils.Throwables;
 import utils.stream.FStream;
 
@@ -21,39 +18,83 @@ import utils.stream.FStream;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class DrICVideoServerClient implements DrICVideoServer {
-	private final Server m_server;
+public class PBDrICVideoServerProxy implements DrICVideoServer {
 	private final ManagedChannel m_channel;
 	private final DrICVideoServerBlockingStub m_blockingStub; 
 	private final DrICVideoServerStub m_stub;
 	
-	public static DrICVideoServerClient connect(String host, int port) throws IOException {
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
-													.usePlaintext()
-													.build();
-		
-		return new DrICVideoServerClient(channel);
-	}
-	
-	protected DrICVideoServerClient(ManagedChannel channel) throws IOException {
+	public PBDrICVideoServerProxy(ManagedChannel channel) {
 		m_channel = channel;
-		
 		m_stub = DrICVideoServerGrpc.newStub(channel);
 		m_blockingStub = DrICVideoServerGrpc.newBlockingStub(channel);
-
-		m_server = ServerBuilder.forPort(0).build();
-		m_server.start();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				disconnect();
-			}
-		});
 	}
 	
-	public void disconnect() {
+	public void shutdown() {
 		m_channel.shutdown();
-		m_server.shutdown();
+	}
+
+	@Override
+	public CameraInfo getCamera(String cameraId) throws CameraNotFoundException, DrICVideoException {
+		try {
+			return m_blockingStub.getCamera(PBUtils.toStringValue(cameraId));
+		}
+		catch ( StatusRuntimeException e ) {
+			switch ( e.getStatus().getCode() ) {
+				case NOT_FOUND:
+					throw new CameraNotFoundException(cameraId);
+				case INTERNAL:
+					throw new DrICVideoException(e.getStatus().getDescription());
+				default:
+					throw new AssertionError("" + e);
+			}
+		}
+	}
+
+	@Override
+	public FStream<CameraInfo> getCameraAll() throws DrICVideoException {
+		try {
+			return FStream.from(m_blockingStub.getCameraAll(PBUtils.VOID));
+		}
+		catch ( StatusRuntimeException e ) {
+			switch ( e.getStatus().getCode() ) {
+				case INTERNAL:
+					throw new DrICVideoException(e.getStatus().getDescription());
+				default:
+					throw new AssertionError("" + e);
+			}
+		}
+	}
+
+	@Override
+	public void addCamera(CameraInfo info) throws CameraExistsException, DrICVideoException {
+		try {
+			m_blockingStub.addCamera(info);
+		}
+		catch ( StatusRuntimeException e ) {
+			switch ( e.getStatus().getCode() ) {
+				case ALREADY_EXISTS:
+					throw new CameraExistsException(info.getId());
+				case INTERNAL:
+					throw new DrICVideoException(e.getStatus().getDescription());
+				default:
+					throw new AssertionError("" + e);
+			}
+		}
+	}
+
+	@Override
+	public void removeCamera(String cameraId) throws DrICVideoException {
+		try {
+			m_blockingStub.removeCamera(PBUtils.toStringValue(cameraId));
+		}
+		catch ( StatusRuntimeException e ) {
+			switch ( e.getStatus().getCode() ) {
+				case INTERNAL:
+					throw new DrICVideoException(e.getStatus().getDescription());
+				default:
+					throw new AssertionError("" + e);
+			}
+		}
 	}
 
 	@Override

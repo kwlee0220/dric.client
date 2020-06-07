@@ -1,52 +1,73 @@
 package dric;
 
+import java.util.Map;
+
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import com.google.common.collect.Maps;
+
 import dric.grpc.PBDrICPlatformProxy;
-import dric.proto.ServiceEndPoint;
+import dric.proto.EndPoint;
 import dric.store.TopicException;
+import dric.topic.TopicClient;
+import dric.topic.mqtt.MqttTopicClient;
+import dric.video.PBDrICVideoServerProxy;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import utils.func.Lazy;
+import utils.stream.KVFStream;
 
 /**
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class DrICClient {
-	private final String m_id;
-	private final ClientConfig m_config;
+public class DrICClient implements AutoCloseable {
 	private final PBDrICPlatformProxy m_platform;
-	private final Lazy<IMqttClient> m_mqttClient = Lazy.of(this::createMqttClient);
 	
-	public static DrICClient connect(String id, ClientConfig config) {
-		ServiceEndPoint sep = config.dricPlatformEndPoint();
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(sep.getHost(), sep.getPort())
-													.usePlaintext()
-													.build();
-		PBDrICPlatformProxy proxy = new PBDrICPlatformProxy(channel);
-		return new DrICClient(id, proxy, config);
+	private final Map<EndPoint,ManagedChannel> m_channels = Maps.newHashMap();
+	
+	public static DrICClient connect(EndPoint platformEndPoint) {
+		return new DrICClient(platformEndPoint);
 	}
 	
-	private DrICClient(String id, PBDrICPlatformProxy proxy, ClientConfig config) {
-		m_id = id;
-		m_config = config;
-		m_platform = proxy;
+	private DrICClient(EndPoint ep) {
+		ManagedChannel channel = openChannel(ep);
+		m_platform = new PBDrICPlatformProxy(channel);
 	}
 	
-	public IMqttClient getIMqttClient() {
-		return m_mqttClient.get();
+	@Override
+	public void close() {
+		KVFStream.from(m_channels)
+				.forEachOrIgnore(kv -> kv.value().shutdown());
 	}
 	
-	private IMqttClient createMqttClient() {
+	public PBDrICPlatformProxy getPlatform() {
+		return m_platform;
+	}
+	
+	public PBDrICVideoServerProxy getVideoServer() {
+		EndPoint ep = m_platform.getServiceEndPoint("video_server");
+		
+		ManagedChannel channel = openChannel(ep);
+		return new PBDrICVideoServerProxy(channel);
+	}
+	
+	public EndPoint getServiceEndPoint(String name) {
+		return m_platform.getServiceEndPoint(name);
+	}
+	
+	public TopicClient getTopicClient(String clientId) {
+		return new MqttTopicClient(getIMqttClient(clientId));
+	}
+	
+	private IMqttClient getIMqttClient(String id) {
 		try {
-			ServiceEndPoint ep = m_platform.getTopicServerEndPoint();
+			EndPoint ep = m_platform.getServiceEndPoint("topic_server");
 			String brokerUrl = String.format("tcp://%s:%d", ep.getHost(), ep.getPort());
 			
-			IMqttClient client = new MqttClient(brokerUrl, m_id);
+			IMqttClient client = new MqttClient(brokerUrl, id);
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setAutomaticReconnect(true);
 			options.setCleanSession(true);
@@ -58,5 +79,17 @@ public class DrICClient {
 		catch ( MqttException e ) {
 			throw new TopicException("" + e);
 		}
+	}
+	
+	private ManagedChannel openChannel(EndPoint ep) {
+		ManagedChannel channel = m_channels.get(ep);
+		if ( channel == null ) {
+			channel = ManagedChannelBuilder.forAddress(ep.getHost(), ep.getPort())
+											.usePlaintext()
+											.build();
+			m_channels.put(ep, channel);
+		}
+		
+		return channel;
 	}
 }

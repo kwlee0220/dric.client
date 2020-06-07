@@ -17,14 +17,14 @@ public class TestClient {
 		ClientConfig config = ClientConfig.from(new File("configs/dric_client.yaml"));
 		
 		SchemaRegistry reg = SchemaRegistry.get();
-		DrICClient client = DrICClient.connect("test", config);
-		IMqttClient mqtt = client.getIMqttClient();
-		TopicCameraFrame topic = new TopicCameraFrame(mqtt);
-		
-		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
-		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
-		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
-		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
+//		DrICClient client = DrICClient.connect(config.platformEndPoint());
+//		IMqttClient mqtt = client.getIMqttClient("test");
+//		TopicCameraFrame topic = new TopicCameraFrame(mqtt);
+//		
+//		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
+//		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
+//		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
+//		topic.publish(new CameraFrame("cam_1", new byte[0], 1));
 		
 //		GenericRecord datum = new GenericData.Record(schema);
 //		datum.put("left", "L");
