@@ -17,45 +17,48 @@ import dric.topic.mqtt.MqttTopicClient;
 import dric.video.PBDrICVideoServerProxy;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import utils.stream.KVFStream;
+import utils.Utilities;
 
 /**
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class DrICClient implements AutoCloseable {
-	private final PBDrICPlatformProxy m_platform;
+public class DrICClient {
+	private static final String PLATFORM = "platform";
+	private static final String VIDEO_SERVER = "video_server";
+	private static final String TOPIC_SERVER = "topic_server";
 	
-	private final Map<EndPoint,ManagedChannel> m_channels = Maps.newHashMap();
+	private final Map<String,EndPoint> m_serviceEndPoints = Maps.newHashMap();
 	
 	public static DrICClient connect(EndPoint platformEndPoint) {
 		return new DrICClient(platformEndPoint);
 	}
 	
 	private DrICClient(EndPoint ep) {
-		ManagedChannel channel = openChannel(ep);
-		m_platform = new PBDrICPlatformProxy(channel);
-	}
-	
-	@Override
-	public void close() {
-		KVFStream.from(m_channels)
-				.forEachOrIgnore(kv -> kv.value().shutdown());
+		Utilities.checkNotNullArgument(ep);
+		
+		m_serviceEndPoints.put(PLATFORM, ep);
 	}
 	
 	public PBDrICPlatformProxy getPlatform() {
-		return m_platform;
+		return new PBDrICPlatformProxy(openChannel(m_serviceEndPoints.get(PLATFORM)));
 	}
 	
 	public PBDrICVideoServerProxy getVideoServer() {
-		EndPoint ep = m_platform.getServiceEndPoint("video_server");
-		
-		ManagedChannel channel = openChannel(ep);
-		return new PBDrICVideoServerProxy(channel);
+		EndPoint ep = getServiceEndPoint(VIDEO_SERVER);
+		return new PBDrICVideoServerProxy(openChannel(ep));
 	}
 	
-	public EndPoint getServiceEndPoint(String name) {
-		return m_platform.getServiceEndPoint(name);
+	private EndPoint getServiceEndPoint(String name) {
+		EndPoint ep = m_serviceEndPoints.get(name);
+		if ( ep == null ) {
+			try ( PBDrICPlatformProxy platform = getPlatform() ) {
+				ep = platform.getServiceEndPoint(name);
+				m_serviceEndPoints.put(name, ep);
+			}
+		}
+		
+		return ep;
 	}
 	
 	public TopicClient getTopicClient(String clientId) {
@@ -64,7 +67,7 @@ public class DrICClient implements AutoCloseable {
 	
 	private IMqttClient getIMqttClient(String id) {
 		try {
-			EndPoint ep = m_platform.getServiceEndPoint("topic_server");
+			EndPoint ep = getServiceEndPoint(TOPIC_SERVER);
 			String brokerUrl = String.format("tcp://%s:%d", ep.getHost(), ep.getPort());
 			
 			IMqttClient client = new MqttClient(brokerUrl, id);
@@ -82,14 +85,8 @@ public class DrICClient implements AutoCloseable {
 	}
 	
 	private ManagedChannel openChannel(EndPoint ep) {
-		ManagedChannel channel = m_channels.get(ep);
-		if ( channel == null ) {
-			channel = ManagedChannelBuilder.forAddress(ep.getHost(), ep.getPort())
+		return ManagedChannelBuilder.forAddress(ep.getHost(), ep.getPort())
 											.usePlaintext()
 											.build();
-			m_channels.put(ep, channel);
-		}
-		
-		return channel;
 	}
 }

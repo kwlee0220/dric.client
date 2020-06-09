@@ -4,6 +4,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 
+import dric.proto.BoundingBoxProto;
 import dric.store.SchemaRegistry;
 
 
@@ -11,7 +12,7 @@ import dric.store.SchemaRegistry;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class BoundingBox implements AvroSerializable {
+public class BoundingBox implements AvroSerializable, PBSerializable<BoundingBoxProto> {
 	private static final String FULL_NAME = "dric.BoundingBox";
 	private static Schema SCHEMA;
 	
@@ -56,5 +57,17 @@ public class BoundingBox implements AvroSerializable {
 		ImageCoordinate br = ImageCoordinate.fromGenericRecord((GenericRecord)grec.get("br"));
 		
 		return new BoundingBox(tl, br);
+	}
+
+	@Override
+	public BoundingBoxProto toProto() {
+		return BoundingBoxProto.newBuilder()
+								.setTl(m_tl.toProto())
+								.setBr(m_br.toProto())
+								.build();
+	}
+
+	public static BoundingBox fromProto(BoundingBoxProto proto) {
+		return new BoundingBox(ImageCoordinate.fromProto(proto.getTl()), ImageCoordinate.fromProto(proto.getBr()));
 	}
 }

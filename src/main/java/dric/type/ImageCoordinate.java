@@ -6,6 +6,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 
+import dric.proto.ImageCoordinateProto;
 import dric.store.AvroUtils;
 import dric.store.SchemaRegistry;
 
@@ -14,7 +15,7 @@ import dric.store.SchemaRegistry;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class ImageCoordinate implements AvroSerializable {
+public class ImageCoordinate implements AvroSerializable, PBSerializable<ImageCoordinateProto> {
 	private static final String FULL_NAME = "dric.ImageCoordinate";
 	private static Schema SCHEMA;
 	
@@ -63,5 +64,17 @@ public class ImageCoordinate implements AvroSerializable {
 		Schema schema = SchemaRegistry.get().getUnchecked(FULL_NAME);
 		GenericRecord grec = AvroUtils.deserialize(schema, bytes);
 		return fromGenericRecord(grec);
+	}
+
+	@Override
+	public ImageCoordinateProto toProto() {
+		return ImageCoordinateProto.newBuilder()
+									.setX(m_x)
+									.setY(m_y)
+									.build();
+	}
+
+	public static ImageCoordinate fromProto(ImageCoordinateProto proto) {
+		return new ImageCoordinate(proto.getX(), proto.getY());
 	}
 }

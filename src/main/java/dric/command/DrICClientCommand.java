@@ -51,8 +51,5 @@ public class DrICClientCommand implements PicocliCommand<DrICClient> {
 			
 //			m_spec.commandLine().usage(System.out, Ansi.OFF);
 		}
-		finally {
-			m_client.close();
-		}
 	}
 }

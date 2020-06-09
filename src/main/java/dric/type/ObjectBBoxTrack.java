@@ -4,6 +4,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 
+import dric.proto.ObjectBBoxTrackProto;
 import dric.store.SchemaRegistry;
 
 
@@ -11,17 +12,17 @@ import dric.store.SchemaRegistry;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class ObjectBBoxTrack implements AvroSerializable {
+public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectBBoxTrackProto>  {
 	private static final String FULL_NAME = "dric.ObjectBBoxTrack";
 	private static Schema SCHEMA;
 	
 	private final String m_cameraId;
 	private final String m_luid;
 	private final BoundingBox m_bbox;
-	private final int m_heading;
+	private final float m_heading;
 	private final long m_ts;
 	
-	public ObjectBBoxTrack(String cameraId, String luid, BoundingBox bbox, int heading, long ts) {
+	public ObjectBBoxTrack(String cameraId, String luid, BoundingBox bbox, float heading, long ts) {
 		m_cameraId = cameraId;
 		m_luid = luid;
 		m_bbox = bbox;
@@ -52,7 +53,7 @@ public class ObjectBBoxTrack implements AvroSerializable {
 		return m_bbox;
 	}
 	
-	public int heading() {
+	public float heading() {
 		return m_heading;
 	}
 	
@@ -80,5 +81,21 @@ public class ObjectBBoxTrack implements AvroSerializable {
 		long ts = (long)grec.get("ts");
 		
 		return new ObjectBBoxTrack(cameraId, luid, bbox, heading, ts);
+	}
+
+	@Override
+	public ObjectBBoxTrackProto toProto() {
+		return ObjectBBoxTrackProto.newBuilder()
+								.setCameraId(m_cameraId)
+								.setLuid(m_luid)
+								.setBbox(m_bbox.toProto())
+								.setHeading(m_heading)
+								.setTs(m_ts)
+								.build();
+	}
+
+	public static ObjectBBoxTrack fromProto(ObjectBBoxTrackProto proto) {
+		return new ObjectBBoxTrack(proto.getCameraId(), proto.getLuid(), BoundingBox.fromProto(proto.getBbox()),
+									proto.getHeading(), proto.getTs());
 	}
 }
