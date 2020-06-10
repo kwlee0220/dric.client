@@ -1,6 +1,7 @@
 package dric.topic.mqtt;
 
 import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import dric.topic.Topic;
 import dric.topic.TopicClient;
@@ -15,6 +16,14 @@ public class MqttTopicClient implements TopicClient {
 	
 	public MqttTopicClient(IMqttClient client) {
 		m_client = client;
+	}
+
+	@Override
+	public void disconnect() {
+		try {
+			m_client.disconnect();
+		}
+		catch ( MqttException ignored ) { }
 	}
 
 	@Override

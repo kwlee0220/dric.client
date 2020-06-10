@@ -18,13 +18,15 @@ public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectB
 	
 	private final String m_cameraId;
 	private final String m_luid;
+	private final String m_objClass;
 	private final BoundingBox m_bbox;
 	private final float m_heading;
 	private final long m_ts;
 	
-	public ObjectBBoxTrack(String cameraId, String luid, BoundingBox bbox, float heading, long ts) {
+	public ObjectBBoxTrack(String cameraId, String luid, String objClass, BoundingBox bbox, float heading, long ts) {
 		m_cameraId = cameraId;
 		m_luid = luid;
+		m_objClass = objClass;
 		m_bbox = bbox;
 		m_heading = heading;
 		m_ts = ts;
@@ -49,6 +51,10 @@ public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectB
 		return m_luid;
 	}
 	
+	public String objectClass() {
+		return m_objClass;
+	}
+	
 	public BoundingBox bbox() {
 		return m_bbox;
 	}
@@ -66,6 +72,7 @@ public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectB
 		GenericRecord grec = new GenericData.Record(schema());
 		grec.put("camera_id", m_cameraId);
 		grec.put("luid", m_luid);
+		grec.put("object_class", m_objClass);
 		grec.put("bbox", m_bbox.toGenericRecord());
 		grec.put("heading", m_heading);
 		grec.put("ts", m_ts);
@@ -76,11 +83,12 @@ public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectB
 	public static ObjectBBoxTrack fromGenericRecord(GenericRecord grec) {
 		String cameraId = grec.get("camera_id").toString();
 		String luid = grec.get("luid").toString();
+		String objCls = grec.get("object_class").toString();
 		BoundingBox bbox = BoundingBox.fromGenericRecord((GenericRecord)grec.get("bbox"));
 		int heading = (int)grec.get("heading");
 		long ts = (long)grec.get("ts");
 		
-		return new ObjectBBoxTrack(cameraId, luid, bbox, heading, ts);
+		return new ObjectBBoxTrack(cameraId, luid, objCls, bbox, heading, ts);
 	}
 
 	@Override
@@ -88,6 +96,7 @@ public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectB
 		return ObjectBBoxTrackProto.newBuilder()
 								.setCameraId(m_cameraId)
 								.setLuid(m_luid)
+								.setObjectClass(m_objClass)
 								.setBbox(m_bbox.toProto())
 								.setHeading(m_heading)
 								.setTs(m_ts)
@@ -95,7 +104,7 @@ public class ObjectBBoxTrack implements AvroSerializable, PBSerializable<ObjectB
 	}
 
 	public static ObjectBBoxTrack fromProto(ObjectBBoxTrackProto proto) {
-		return new ObjectBBoxTrack(proto.getCameraId(), proto.getLuid(), BoundingBox.fromProto(proto.getBbox()),
-									proto.getHeading(), proto.getTs());
+		return new ObjectBBoxTrack(proto.getCameraId(), proto.getLuid(), proto.getObjectClass(),
+									BoundingBox.fromProto(proto.getBbox()), proto.getHeading(), proto.getTs());
 	}
 }

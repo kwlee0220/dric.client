@@ -8,4 +8,6 @@ import dric.type.CameraFrame;
  */
 public interface TopicClient {
 	public Topic<CameraFrame> getCameraFrameTopic();
+	
+	public void disconnect();
 }
