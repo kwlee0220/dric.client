@@ -3,8 +3,9 @@ package dric.grpc;
 import dric.proto.DrICPlatformGrpc;
 import dric.proto.DrICPlatformGrpc.DrICPlatformBlockingStub;
 import dric.proto.DrICPlatformGrpc.DrICPlatformStub;
-import dric.proto.EndPoint;
+import dric.proto.EndPointResponse;
 import io.grpc.ManagedChannel;
+import utils.grpc.PBUtils;
 
 /**
  * 
@@ -25,7 +26,7 @@ public class PBDrICPlatformProxy implements AutoCloseable {
 		((ManagedChannel)m_stub.getChannel()).shutdown();
 	}
 	
-	public EndPoint getServiceEndPoint(String serviceName) {
-		return m_blockingStub.getServiceEndPoint(PBUtils.toStringValue(serviceName));
+	public EndPointResponse getServiceEndPoint(String serviceName) {
+		return m_blockingStub.getServiceEndPoint(PBUtils.STRING(serviceName));
 	}
 }

@@ -70,6 +70,7 @@ ext.paho_version = '1.2.4'
 
 dependencies {
 	compile project(":utils")
+	compile project(":utils.grpc")
 	
 	// OpenCV
 	compile fileTree(dir: 'lib', include: "opencv-${opencv_version}.jar")

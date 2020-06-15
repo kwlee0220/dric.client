@@ -11,13 +11,16 @@ import com.google.common.collect.Maps;
 
 import dric.grpc.PBDrICPlatformProxy;
 import dric.proto.EndPoint;
+import dric.proto.EndPointResponse;
 import dric.store.TopicException;
 import dric.topic.TopicClient;
 import dric.topic.mqtt.MqttTopicClient;
 import dric.video.PBDrICVideoServerProxy;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import utils.Throwables;
 import utils.Utilities;
+import utils.grpc.PBUtils;
 
 /**
  * 
@@ -53,7 +56,7 @@ public class DrICClient {
 		EndPoint ep = m_serviceEndPoints.get(name);
 		if ( ep == null ) {
 			try ( PBDrICPlatformProxy platform = getPlatform() ) {
-				ep = platform.getServiceEndPoint(name);
+				ep = handle(platform.getServiceEndPoint(name));
 				m_serviceEndPoints.put(name, ep);
 			}
 		}
@@ -88,5 +91,16 @@ public class DrICClient {
 		return ManagedChannelBuilder.forAddress(ep.getHost(), ep.getPort())
 											.usePlaintext()
 											.build();
+	}
+	
+	private static EndPoint handle(EndPointResponse resp) {
+		switch ( resp.getEitherCase() ) {
+			case END_POINT:
+				return resp.getEndPoint();
+			case ERROR:
+				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
+			default:
+				throw new AssertionError();
+		}
 	}
 }

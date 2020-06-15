@@ -1,6 +1,5 @@
 package dric.video;
 
-import dric.grpc.PBUtils;
 import dric.proto.CameraFrameRangeRequest;
 import dric.proto.CameraFrameRequest;
 import dric.proto.CameraFrameResponse;
@@ -12,6 +11,7 @@ import dric.type.CameraFrame;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import utils.Throwables;
+import utils.grpc.PBUtils;
 import utils.stream.FStream;
 
 /**
@@ -36,7 +36,7 @@ public class PBDrICVideoServerProxy implements DrICVideoServer {
 	@Override
 	public CameraInfo getCamera(String cameraId) throws CameraNotFoundException, DrICVideoException {
 		try {
-			return m_blockingStub.getCamera(PBUtils.toStringValue(cameraId));
+			return m_blockingStub.getCamera(PBUtils.STRING(cameraId));
 		}
 		catch ( StatusRuntimeException e ) {
 			switch ( e.getStatus().getCode() ) {
@@ -85,7 +85,7 @@ public class PBDrICVideoServerProxy implements DrICVideoServer {
 	@Override
 	public void removeCamera(String cameraId) throws DrICVideoException {
 		try {
-			m_blockingStub.removeCamera(PBUtils.toStringValue(cameraId));
+			m_blockingStub.removeCamera(PBUtils.STRING(cameraId));
 		}
 		catch ( StatusRuntimeException e ) {
 			switch ( e.getStatus().getCode() ) {

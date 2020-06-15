@@ -5,31 +5,31 @@ option java_package = "dric.proto";
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
+import "base.proto";
+
 
 package dric;
-
-message ErrorProto {
-	string code = 1;
-	oneof optional_details {
-		string details = 2;
-	}
-}
 
 
 /////////////////////////////////////////////////////////////////
 // Basic request & response protos
 /////////////////////////////////////////////////////////////////
-//message VoidProto { }
 message EmptyResponse {
 	oneof either {
 		google.protobuf.Empty void = 1;
-		ErrorProto error = 2;
+		proto.ErrorValue error = 2;
 	}
 }
 
 message EndPoint {
 	string host = 1;
 	int32 port = 2;
+}
+message EndPointResponse {
+	oneof either {
+		EndPoint end_point = 1;
+		proto.ErrorValue error = 2;
+	}
 }
 
 message JdbcEndPoint {
@@ -47,7 +47,7 @@ message JdbcEndPoint {
 /////////////////////////////////////////////////////////////////
 
 service DrICPlatform {
-	rpc getServiceEndPoint(google.protobuf.StringValue) returns (EndPoint);
+	rpc getServiceEndPoint(google.protobuf.StringValue) returns (EndPointResponse);
 }
 
 
@@ -132,7 +132,7 @@ message CameraFrameRequest {
 message CameraFrameResponse {
 	oneof either {
 		CameraFrameProto frame = 1;
-		ErrorProto error = 2;
+		proto.ErrorValue error = 2;
 	}
 }
 
