@@ -14,7 +14,7 @@ import dric.type.CameraFrame;
  */
 public class TestClient {
 	public static final void main(String... args) throws Exception {
-		ClientConfig config = ClientConfig.from(new File("configs/dric_client.yaml"));
+//		ClientConfig config = ClientConfig.from(new File("configs/dric_client.yaml"));
 		
 		SchemaRegistry reg = SchemaRegistry.get();
 //		DrICClient client = DrICClient.connect(config.platformEndPoint());

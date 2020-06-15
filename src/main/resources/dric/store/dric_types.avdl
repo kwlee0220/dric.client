@@ -20,14 +20,6 @@ protocol ImageCoordinate {
 		ImageCoordinate br;
 	}
 	
-	record Pose3D {
-		Coordinate loc;
-		float azimuth;
-		float yaw;
-		float pitch;
-		float roll;
-	}
-	
 	record CameraFrame {
 		string camera_id;
 		bytes image;
@@ -37,9 +29,27 @@ protocol ImageCoordinate {
 	record ObjectBBoxTrack {
 		string camera_id;		// 영상을 취득한 카메라 식별자
 		string luid;			// 검출된 물체의 지역 식별자
+		string object_class;	// 검출된 물체의 클래스
 		BoundingBox bbox;		// 검출된 물체의 BBox
-		int heading;			// 검출된 물체의 방향
+		float heading;			// 검출된 물체의 방향
 		long ts;				// 검출에 활용된 이미지 캡쳐 시각
+	}
+	
+	record ObjectTrack {
+		string camera_id;		// 영상을 취득한 카메라 식별자
+		string luid;			// 검출된 물체의 지역 식별자
+		string object_class;	// 검출된 물체의 클래스
+		Coordinate pos;			// 검출된 물체의 위경도 좌표
+		float azimuth;			// 검출된 물체의 방위각 
+		long ts;				// 검출에 활용된 이미지 캡쳐 시각
+	}
+	
+	record Pose3D {
+		Coordinate loc;
+		float azimuth;
+		float yaw;
+		float pitch;
+		float roll;
 	}
 	
 	record Object3DTrack {
