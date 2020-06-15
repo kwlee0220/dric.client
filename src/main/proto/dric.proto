@@ -14,12 +14,6 @@ package dric;
 /////////////////////////////////////////////////////////////////
 // Basic request & response protos
 /////////////////////////////////////////////////////////////////
-message EmptyResponse {
-	oneof either {
-		google.protobuf.Empty void = 1;
-		proto.ErrorValue error = 2;
-	}
-}
 
 message EndPoint {
 	string host = 1;
@@ -66,8 +60,8 @@ service DrICDataStore {
 /////////////////////////////////////////////////////////////////
 
 service DrICVideoServer {
-	rpc addCamera(CameraInfo) returns (google.protobuf.Empty);
-	rpc removeCamera(google.protobuf.StringValue) returns (google.protobuf.Empty);
+	rpc addCamera(CameraInfo) returns (proto.VoidResponse);
+	rpc removeCamera(google.protobuf.StringValue) returns (proto.VoidResponse);
 	rpc getCamera(google.protobuf.StringValue) returns (CameraInfo);
 	rpc getCameraAll(google.protobuf.Empty) returns (stream CameraInfo);
 	
