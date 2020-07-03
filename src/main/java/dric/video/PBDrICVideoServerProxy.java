@@ -53,7 +53,7 @@ public class PBDrICVideoServerProxy implements DrICVideoServer {
 	@Override
 	public FStream<CameraInfo> getCameraAll() throws DrICVideoException {
 		try {
-			return FStream.from(m_blockingStub.getCameraAll(PBUtils.VOID));
+			return FStream.from(m_blockingStub.getCameraAll(PBUtils.VOID()));
 		}
 		catch ( StatusRuntimeException e ) {
 			switch ( e.getStatus().getCode() ) {
