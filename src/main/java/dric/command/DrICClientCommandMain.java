@@ -30,7 +30,7 @@ public class DrICClientCommandMain extends DrICClientCommand {
 	private static final Logger s_logger = LoggerFactory.getLogger(DrICClientCommandMain.class);
 	
 	public static final void main(String... args) throws Exception {
-		configureLog4j();
+		configureStaticLog4j();
 
 		DrICClientCommandMain cmd = new DrICClientCommandMain();
 		CommandLine.run(cmd, System.out, System.err, Help.Ansi.OFF, args);
@@ -42,7 +42,7 @@ public class DrICClientCommandMain extends DrICClientCommand {
 		return new File(homeDir, "log4j.properties");
 	}
 	
-	public static File configureLog4j() throws IOException {
+	public static File configureStaticLog4j() throws IOException {
 		File propsFile = getLog4jPropertiesFile();
 		
 		Properties props = new Properties();

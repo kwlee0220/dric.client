@@ -52,4 +52,9 @@ public class DrICClientCommand implements PicocliCommand<DrICClient> {
 //			m_spec.commandLine().usage(System.out, Ansi.OFF);
 		}
 	}
+
+	@Override
+	public void configureLog4j() throws IOException {
+		// do nothing
+	}
 }
