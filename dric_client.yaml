@@ -1,5 +1,0 @@
-dric_platform:
-    host: localhost
-    port: 12345
-
-opencv_dll: C:/development/dric/dric.video/lib/opencv_java430.dll

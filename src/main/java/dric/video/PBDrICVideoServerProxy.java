@@ -18,9 +18,10 @@ import utils.stream.FStream;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class PBDrICVideoServerProxy implements DrICVideoServer {
+public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 	private final ManagedChannel m_channel;
 	private final DrICVideoServerBlockingStub m_blockingStub; 
+	@SuppressWarnings("unused")
 	private final DrICVideoServerStub m_stub;
 	
 	public PBDrICVideoServerProxy(ManagedChannel channel) {
@@ -28,8 +29,9 @@ public class PBDrICVideoServerProxy implements DrICVideoServer {
 		m_stub = DrICVideoServerGrpc.newStub(channel);
 		m_blockingStub = DrICVideoServerGrpc.newBlockingStub(channel);
 	}
-	
-	public void shutdown() {
+
+	@Override
+	public void close() {
 		m_channel.shutdown();
 	}
 

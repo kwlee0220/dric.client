@@ -5,7 +5,7 @@ import dric.command.VideoServerCommands.AddCamera;
 import dric.command.VideoServerCommands.ListCameraAll;
 import dric.command.VideoServerCommands.RemoveCamera;
 import dric.proto.CameraInfo;
-import dric.video.DrICVideoServer;
+import dric.video.PBDrICVideoServerProxy;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -30,9 +30,10 @@ public class VideoServerCommands extends PicocliSubCommand<DrICClient> {
 		
 		@Override
 		public void run(DrICClient client) throws Exception {
-			DrICVideoServer vserver = client.getVideoServer();
-			vserver.getCameraAll()
-					.forEach(this::printCamera);
+			try ( PBDrICVideoServerProxy vserver = client.getVideoServer() ) {
+				vserver.getCameraAll()
+						.forEach(this::printCamera);
+			}
 		}
 		
 		private void printCamera(CameraInfo camera) {
@@ -60,8 +61,9 @@ public class VideoServerCommands extends PicocliSubCommand<DrICClient> {
 										.setRtspUrl(m_rtpsUrl)
 										.build();
 			
-			DrICVideoServer vserver = client.getVideoServer();
-			vserver.addCamera(info);
+			try ( PBDrICVideoServerProxy vserver = client.getVideoServer() ) {
+				vserver.addCamera(info);
+			}
 		}
 	}
 	
@@ -72,8 +74,9 @@ public class VideoServerCommands extends PicocliSubCommand<DrICClient> {
 		
 		@Override
 		public void run(DrICClient client) throws Exception {
-			DrICVideoServer vserver = client.getVideoServer();
-			vserver.removeCamera(m_cameraId);
+			try ( PBDrICVideoServerProxy vserver = client.getVideoServer() ) {
+				vserver.removeCamera(m_cameraId);
+			}
 		}
 	}
 	
