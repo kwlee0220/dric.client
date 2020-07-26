@@ -14,8 +14,8 @@ public interface DrICVideoServer {
 	public CameraInfo getCamera(String cameraId) throws CameraNotFoundException, DrICVideoException;
 	public FStream<CameraInfo> getCameraAll() throws DrICVideoException;
 	
-	public CameraFrame getCameraFrame(String cameraId, long ts)
-		throws FrameNotFoundException, DrICVideoException;
-	public FStream<CameraFrame> queryCameraFrames(String cameraId, long start, long stop)
-		throws DrICVideoException;
+//	public CameraFrame getCameraFrame(String cameraId, long ts)
+//		throws FrameNotFoundException, DrICVideoException;
+//	public FStream<CameraFrame> queryCameraFrames(String cameraId, long start, long stop)
+//		throws DrICVideoException;
 }

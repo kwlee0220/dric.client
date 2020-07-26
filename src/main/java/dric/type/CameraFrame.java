@@ -9,16 +9,23 @@ import org.apache.avro.generic.GenericRecord;
 import com.google.protobuf.ByteString;
 
 import dric.proto.CameraFrameProto;
-import dric.store.SchemaRegistry;
+import marmot.RecordSchema;
+import marmot.avro.AvroUtils;
+import marmot.type.DataType;
 
 
 /**
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class CameraFrame implements AvroSerializable, PBSerializable<CameraFrameProto> {
-	private static final String FULL_NAME = "dric.CameraFrame";
-	private static Schema SCHEMA;
+public class CameraFrame implements AvroSerializable {
+	private static final RecordSchema RECORD_SCHEMA = RecordSchema.builder()
+																.addColumn("camera_id", DataType.STRING)
+																.addColumn("image", DataType.BINARY)
+																.addColumn("ts", DataType.LONG)
+																.build();
+	private static Schema AVRO_SCHEMA = AvroUtils.toSchema(RECORD_SCHEMA);
+	private static String TOPIC_NAME = "dric/camera_frames";
 	
 	private final String m_cameraId;
 	private final byte[] m_image;
@@ -30,15 +37,21 @@ public class CameraFrame implements AvroSerializable, PBSerializable<CameraFrame
 		m_ts = ts;
 	}
 	
+	public static RecordSchema getRecordSchema() {
+		return RECORD_SCHEMA;
+	}
+	
+	public static Schema getAvroSchema() {
+		return AVRO_SCHEMA;
+	}
+	
+	public static String getTopicName() {
+		return TOPIC_NAME;
+	}
+	
 	@Override
 	public Schema schema() {
-		if ( SCHEMA == null ) {
-			SCHEMA = SchemaRegistry.get()
-									.get(FULL_NAME)
-									.getOrThrow(() -> new SchemaNotFoundException(FULL_NAME));
-		}
-		
-		return SCHEMA;
+		return AVRO_SCHEMA;
 	}
 	
 	public String cameraId() {
@@ -70,18 +83,5 @@ public class CameraFrame implements AvroSerializable, PBSerializable<CameraFrame
 		long ts = (long)grec.get("ts");
 		
 		return new CameraFrame(cameraId, image, ts);
-	}
-
-	@Override
-	public CameraFrameProto toProto() {
-		return CameraFrameProto.newBuilder()
-								.setCameraId(m_cameraId)
-								.setImage(ByteString.copyFrom(m_image))
-								.setTs(m_ts)
-								.build();
-	}
-
-	public static CameraFrame fromProto(CameraFrameProto proto) {
-		return new CameraFrame(proto.getCameraId(), proto.getImage().toByteArray(), proto.getTs());
 	}
 }

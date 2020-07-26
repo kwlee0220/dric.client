@@ -1,16 +1,11 @@
 package dric.video;
 
-import dric.proto.CameraFrameRangeRequest;
-import dric.proto.CameraFrameRequest;
-import dric.proto.CameraFrameResponse;
 import dric.proto.CameraInfo;
 import dric.proto.DrICVideoServerGrpc;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerBlockingStub;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerStub;
-import dric.type.CameraFrame;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
-import utils.Throwables;
 import utils.grpc.PBUtils;
 import utils.stream.FStream;
 
@@ -96,49 +91,6 @@ public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 				default:
 					throw new AssertionError("" + e);
 			}
-		}
-	}
-
-	@Override
-	public CameraFrame getCameraFrame(String cameraId, long ts)
-		throws FrameNotFoundException, DrICVideoException {
-		CameraFrameRequest req = CameraFrameRequest.newBuilder()
-													.setCameraId(cameraId)
-													.setTs(ts)
-													.build();
-		
-		CameraFrameResponse resp = m_blockingStub.getCameraFrame(req);
-		switch ( resp.getEitherCase() ) {
-			case FRAME:
-				return CameraFrame.fromProto(resp.getFrame());
-			case ERROR:
-				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
-			default:
-				throw new AssertionError();
-		}
-	}
-
-	@Override
-	public FStream<CameraFrame> queryCameraFrames(String cameraId, long start, long stop)
-		throws DrICVideoException {
-		CameraFrameRangeRequest req = CameraFrameRangeRequest.newBuilder()
-															.setCameraId(cameraId)
-															.setStartTs(start)
-															.setStopTs(stop)
-															.build();
-		
-		return FStream.from(m_blockingStub.queryCameraFrames(req))
-						.map(this::toCameraFrame);
-	}
-	
-	private CameraFrame toCameraFrame(CameraFrameResponse resp) {
-		switch ( resp.getEitherCase() ) {
-			case FRAME:
-				return CameraFrame.fromProto(resp.getFrame());
-			case ERROR:
-				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
-			default:
-				throw new AssertionError();
 		}
 	}
 }

@@ -21,8 +21,8 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 sourceSets {
 	main {
 		java {
-			srcDirs 'src/proto/java'
-			srcDirs 'src/proto/grpc'
+			srcDirs 'src/main/proto/java'
+			srcDirs 'src/main/proto/grpc'
 		}
 	}
 }
@@ -30,15 +30,9 @@ sourceSets {
 repositories {
     mavenLocal()
 	maven {
-		url "http://www.datanucleus.org/downloads/maven2/"
-	}
-	maven {
-		url "http://download.osgeo.org/webdav/geotools/"
+		url "http://repo.osgeo.org/repository/release/"
 	}
     mavenCentral()
-	maven {
-		url "http://repo.boundlessgeo.com/main/"
-	}
 }
 
 ext.opencv_version = '430'
