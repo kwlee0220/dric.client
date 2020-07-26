@@ -3,9 +3,9 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "dric.proto";
 
-import public "base.proto";
+import public "marmot_type.proto";
 
-package dric;
+package dric.proto;
 
 
 /////////////////////////////////////////////////////////////////
@@ -19,7 +19,7 @@ message EndPoint {
 message EndPointResponse {
 	oneof either {
 		EndPoint end_point = 1;
-		proto.ErrorProto error = 2;
+		marmot.proto.ErrorProto error = 2;
 	}
 }
 
@@ -38,7 +38,7 @@ message JdbcEndPoint {
 /////////////////////////////////////////////////////////////////
 
 service DrICPlatform {
-	rpc getServiceEndPoint(proto.StringProto) returns (EndPointResponse);
+	rpc getServiceEndPoint(marmot.proto.StringProto) returns (EndPointResponse);
 }
 
 
@@ -57,10 +57,10 @@ service DrICDataStore {
 /////////////////////////////////////////////////////////////////
 
 service DrICVideoServer {
-	rpc addCamera(CameraInfo) returns (proto.VoidResponse);
-	rpc removeCamera(proto.StringProto) returns (proto.VoidResponse);
-	rpc getCamera(proto.StringProto) returns (CameraInfo);
-	rpc getCameraAll(proto.VoidProto) returns (stream CameraInfo);
+	rpc addCamera(CameraInfo) returns (marmot.proto.VoidResponse);
+	rpc removeCamera(marmot.proto.StringProto) returns (marmot.proto.VoidResponse);
+	rpc getCamera(marmot.proto.StringProto) returns (CameraInfo);
+	rpc getCameraAll(marmot.proto.VoidProto) returns (stream CameraInfo);
 	
 	rpc getCameraFrame(CameraFrameRequest) returns (CameraFrameResponse);
 	rpc queryCameraFrames(CameraFrameRangeRequest) returns (stream CameraFrameResponse);
@@ -124,7 +124,7 @@ message CameraFrameRequest {
 message CameraFrameResponse {
 	oneof either {
 		CameraFrameProto frame = 1;
-		proto.ErrorProto error = 2;
+		marmot.proto.ErrorProto error = 2;
 	}
 }
 

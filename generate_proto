@@ -1,0 +1,5 @@
+#!	/bin/bash
+
+protoc -I=../../marmot/marmot.data/src/main/proto 	\
+		--java_out=src/proto/java	\
+		src/main/proto/dric.proto

@@ -1,7 +1,13 @@
 rootProject.name = 'dric.client'
 
 ext.common_dir = '../../common'
-['utils', 'utils.grpc'].each {
+['utils', 'utils.geo'].each {
 	include ":$it"
 	project(":$it").projectDir = file("${common_dir}/$it")
+}
+
+ext.marmot_dir = "../../marmot"
+['marmot.data'].each {
+	include ":$it"
+	project(":$it").projectDir = file("${marmot_dir}/$it")
 }

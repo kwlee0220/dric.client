@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.text.StringSubstitutor;
 import org.yaml.snakeyaml.Yaml;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import dric.proto.EndPoint;
 import dric.proto.JdbcEndPoint;
@@ -29,6 +31,32 @@ import utils.stream.FStream;
 public class ConfigUtils {
 	private ConfigUtils() {
 		throw new AssertionError("Should not be called: class=" + getClass());
+	}
+	
+	public static Map<String,Object> readYaml(File configFile, Map<String,String> bindings)
+		throws FileNotFoundException, IOException {
+		Map<String,Object> configs = readYaml(configFile);
+		Map<String,Object> replaceds = Maps.newHashMap();
+		for ( Map.Entry<String, Object> ent: configs.entrySet() ) {
+			Object value = ent.getValue();
+			if ( value instanceof String ) {
+				value = StringSubstitutor.replace(value, bindings);
+			}
+			else if ( value instanceof List ) {
+				List<Object> replacedList = Lists.newArrayList();
+				for ( Object elm: (List<Object>)value ) {
+					if ( elm instanceof String ) {
+						elm = StringSubstitutor.replace(elm, bindings);
+					}
+					replacedList.add(elm);
+				}
+				value = replacedList;
+			}
+			
+			replaceds.put(ent.getKey(), value);
+		}
+		
+		return replaceds;
 	}
 	
 	@SuppressWarnings("unchecked")
