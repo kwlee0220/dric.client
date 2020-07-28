@@ -126,20 +126,15 @@ public final class Dric {
       "\001 \001(\t\022\020\n\010start_ts\030\002 \001(\003\022\017\n\007stop_ts\030\003 \001(\003" +
       "2]\n\014DrICPlatform\022M\n\022getServiceEndPoint\022\031" +
       ".marmot.proto.StringProto\032\034.dric.proto.E" +
-      "ndPointResponse2\017\n\rDrICDataStore2\314\003\n\017DrI" +
+      "ndPointResponse2\017\n\rDrICDataStore2\234\002\n\017DrI" +
       "CVideoServer\022?\n\taddCamera\022\026.dric.proto.C" +
       "ameraInfo\032\032.marmot.proto.VoidResponse\022E\n" +
       "\014removeCamera\022\031.marmot.proto.StringProto" +
       "\032\032.marmot.proto.VoidResponse\022>\n\tgetCamer" +
       "a\022\031.marmot.proto.StringProto\032\026.dric.prot" +
       "o.CameraInfo\022A\n\014getCameraAll\022\027.marmot.pr" +
-      "oto.VoidProto\032\026.dric.proto.CameraInfo0\001\022" +
-      "Q\n\016getCameraFrame\022\036.dric.proto.CameraFra" +
-      "meRequest\032\037.dric.proto.CameraFrameRespon" +
-      "se\022[\n\021queryCameraFrames\022#.dric.proto.Cam" +
-      "eraFrameRangeRequest\032\037.dric.proto.Camera" +
-      "FrameResponse0\001B\016\n\ndric.protoP\001P\000b\006proto" +
-      "3"
+      "oto.VoidProto\032\026.dric.proto.CameraInfo0\001B" +
+      "\016\n\ndric.protoP\001P\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

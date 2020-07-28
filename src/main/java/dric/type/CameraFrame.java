@@ -6,9 +6,8 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 
-import com.google.protobuf.ByteString;
-
-import dric.proto.CameraFrameProto;
+import marmot.MarmotSerializable;
+import marmot.Record;
 import marmot.RecordSchema;
 import marmot.avro.AvroUtils;
 import marmot.type.DataType;
@@ -18,14 +17,15 @@ import marmot.type.DataType;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class CameraFrame implements AvroSerializable {
-	private static final RecordSchema RECORD_SCHEMA = RecordSchema.builder()
+public class CameraFrame implements AvroSerializable, MarmotSerializable {
+	public static final RecordSchema RECORD_SCHEMA = RecordSchema.builder()
 																.addColumn("camera_id", DataType.STRING)
 																.addColumn("image", DataType.BINARY)
 																.addColumn("ts", DataType.LONG)
 																.build();
 	private static Schema AVRO_SCHEMA = AvroUtils.toSchema(RECORD_SCHEMA);
 	private static String TOPIC_NAME = "dric/camera_frames";
+	public static String DATASET_ID = "topics/dric/camera_frames";
 	
 	private final String m_cameraId;
 	private final byte[] m_image;
@@ -37,7 +37,8 @@ public class CameraFrame implements AvroSerializable {
 		m_ts = ts;
 	}
 	
-	public static RecordSchema getRecordSchema() {
+	@Override
+	public RecordSchema getRecordSchema() {
 		return RECORD_SCHEMA;
 	}
 	
@@ -64,6 +65,17 @@ public class CameraFrame implements AvroSerializable {
 	
 	public long ts() {
 		return m_ts;
+	}
+
+	@Override
+	public void copyToRecord(Record output) {
+		output.set(0, m_cameraId);
+		output.set(1, m_image);
+		output.set(2, m_ts);
+	}
+	
+	public static CameraFrame fromRecord(Record record) {
+		return new CameraFrame(record.getString(0), record.getBinary(1), record.getLong(2));
 	}
 	
 	@Override

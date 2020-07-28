@@ -1,9 +1,12 @@
 package dric.store;
 
-import java.io.File;
-
-import dric.ClientConfig;
 import dric.DrICClient;
+import dric.type.CameraFrame;
+import marmot.Record;
+import marmot.RecordStream;
+import marmot.dataset.DataSet;
+import marmot.remote.client.GrpcDataSetServerProxy;
+import marmot.remote.client.GrpcMarmotRuntimeProxy;
 
 /**
  * 
@@ -11,9 +14,19 @@ import dric.DrICClient;
  */
 public class TestClient {
 	public static final void main(String... args) throws Exception {
-		ClientConfig config = ClientConfig.from(new File("configs/dric_client.yaml"));
+		DrICClient client = DrICClient.connect("localhost", 10703);
 		
-		DrICClient client = DrICClient.connect(config.platformEndPoint());
+		GrpcMarmotRuntimeProxy marmot = client.getMarmotServer();
+		GrpcDataSetServerProxy dsServer = marmot.getDataSetServer();
+		
+		DataSet ds = marmot.getDataSetServer().getDataSet(CameraFrame.DATASET_ID);
+		try ( RecordStream strm = ds.read() ) {
+			for ( Record record = strm.next(); record != null; record = strm.next() ) {
+				System.out.println(record.getString(0));
+			}
+		}
+		System.out.println(ds);
+		
 //		IMqttClient mqtt = client.getIMqttClient("test");
 //		TopicCameraFrame topic = new TopicCameraFrame(mqtt);
 //		
