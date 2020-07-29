@@ -16,6 +16,8 @@ public class TestClient {
 	public static final void main(String... args) throws Exception {
 		DrICClient client = DrICClient.connect("localhost", 10703);
 		
+		System.out.println(client.getPlatform().getServiceEndPoint("topic_server"));
+		
 		GrpcMarmotRuntimeProxy marmot = client.getMarmotServer();
 		GrpcDataSetServerProxy dsServer = marmot.getDataSetServer();
 		
