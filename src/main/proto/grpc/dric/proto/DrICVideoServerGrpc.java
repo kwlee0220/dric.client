@@ -90,28 +90,28 @@ public final class DrICVideoServerGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<marmot.proto.StringProto,
-      dric.proto.CameraInfo> getGetCameraMethod;
+      dric.proto.CameraInfoResponse> getGetCameraMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "getCamera",
       requestType = marmot.proto.StringProto.class,
-      responseType = dric.proto.CameraInfo.class,
+      responseType = dric.proto.CameraInfoResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<marmot.proto.StringProto,
-      dric.proto.CameraInfo> getGetCameraMethod() {
-    io.grpc.MethodDescriptor<marmot.proto.StringProto, dric.proto.CameraInfo> getGetCameraMethod;
+      dric.proto.CameraInfoResponse> getGetCameraMethod() {
+    io.grpc.MethodDescriptor<marmot.proto.StringProto, dric.proto.CameraInfoResponse> getGetCameraMethod;
     if ((getGetCameraMethod = DrICVideoServerGrpc.getGetCameraMethod) == null) {
       synchronized (DrICVideoServerGrpc.class) {
         if ((getGetCameraMethod = DrICVideoServerGrpc.getGetCameraMethod) == null) {
           DrICVideoServerGrpc.getGetCameraMethod = getGetCameraMethod =
-              io.grpc.MethodDescriptor.<marmot.proto.StringProto, dric.proto.CameraInfo>newBuilder()
+              io.grpc.MethodDescriptor.<marmot.proto.StringProto, dric.proto.CameraInfoResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getCamera"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   marmot.proto.StringProto.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  dric.proto.CameraInfo.getDefaultInstance()))
+                  dric.proto.CameraInfoResponse.getDefaultInstance()))
               .setSchemaDescriptor(new DrICVideoServerMethodDescriptorSupplier("getCamera"))
               .build();
         }
@@ -121,28 +121,28 @@ public final class DrICVideoServerGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<marmot.proto.VoidProto,
-      dric.proto.CameraInfo> getGetCameraAllMethod;
+      dric.proto.CameraInfoResponse> getGetCameraAllMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "getCameraAll",
       requestType = marmot.proto.VoidProto.class,
-      responseType = dric.proto.CameraInfo.class,
+      responseType = dric.proto.CameraInfoResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
   public static io.grpc.MethodDescriptor<marmot.proto.VoidProto,
-      dric.proto.CameraInfo> getGetCameraAllMethod() {
-    io.grpc.MethodDescriptor<marmot.proto.VoidProto, dric.proto.CameraInfo> getGetCameraAllMethod;
+      dric.proto.CameraInfoResponse> getGetCameraAllMethod() {
+    io.grpc.MethodDescriptor<marmot.proto.VoidProto, dric.proto.CameraInfoResponse> getGetCameraAllMethod;
     if ((getGetCameraAllMethod = DrICVideoServerGrpc.getGetCameraAllMethod) == null) {
       synchronized (DrICVideoServerGrpc.class) {
         if ((getGetCameraAllMethod = DrICVideoServerGrpc.getGetCameraAllMethod) == null) {
           DrICVideoServerGrpc.getGetCameraAllMethod = getGetCameraAllMethod =
-              io.grpc.MethodDescriptor.<marmot.proto.VoidProto, dric.proto.CameraInfo>newBuilder()
+              io.grpc.MethodDescriptor.<marmot.proto.VoidProto, dric.proto.CameraInfoResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getCameraAll"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   marmot.proto.VoidProto.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  dric.proto.CameraInfo.getDefaultInstance()))
+                  dric.proto.CameraInfoResponse.getDefaultInstance()))
               .setSchemaDescriptor(new DrICVideoServerMethodDescriptorSupplier("getCameraAll"))
               .build();
         }
@@ -195,14 +195,14 @@ public final class DrICVideoServerGrpc {
     /**
      */
     public void getCamera(marmot.proto.StringProto request,
-        io.grpc.stub.StreamObserver<dric.proto.CameraInfo> responseObserver) {
+        io.grpc.stub.StreamObserver<dric.proto.CameraInfoResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getGetCameraMethod(), responseObserver);
     }
 
     /**
      */
     public void getCameraAll(marmot.proto.VoidProto request,
-        io.grpc.stub.StreamObserver<dric.proto.CameraInfo> responseObserver) {
+        io.grpc.stub.StreamObserver<dric.proto.CameraInfoResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getGetCameraAllMethod(), responseObserver);
     }
 
@@ -227,14 +227,14 @@ public final class DrICVideoServerGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 marmot.proto.StringProto,
-                dric.proto.CameraInfo>(
+                dric.proto.CameraInfoResponse>(
                   this, METHODID_GET_CAMERA)))
           .addMethod(
             getGetCameraAllMethod(),
             asyncServerStreamingCall(
               new MethodHandlers<
                 marmot.proto.VoidProto,
-                dric.proto.CameraInfo>(
+                dric.proto.CameraInfoResponse>(
                   this, METHODID_GET_CAMERA_ALL)))
           .build();
     }
@@ -277,7 +277,7 @@ public final class DrICVideoServerGrpc {
     /**
      */
     public void getCamera(marmot.proto.StringProto request,
-        io.grpc.stub.StreamObserver<dric.proto.CameraInfo> responseObserver) {
+        io.grpc.stub.StreamObserver<dric.proto.CameraInfoResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getGetCameraMethod(), getCallOptions()), request, responseObserver);
     }
@@ -285,7 +285,7 @@ public final class DrICVideoServerGrpc {
     /**
      */
     public void getCameraAll(marmot.proto.VoidProto request,
-        io.grpc.stub.StreamObserver<dric.proto.CameraInfo> responseObserver) {
+        io.grpc.stub.StreamObserver<dric.proto.CameraInfoResponse> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(getGetCameraAllMethod(), getCallOptions()), request, responseObserver);
     }
@@ -325,14 +325,14 @@ public final class DrICVideoServerGrpc {
 
     /**
      */
-    public dric.proto.CameraInfo getCamera(marmot.proto.StringProto request) {
+    public dric.proto.CameraInfoResponse getCamera(marmot.proto.StringProto request) {
       return blockingUnaryCall(
           getChannel(), getGetCameraMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public java.util.Iterator<dric.proto.CameraInfo> getCameraAll(
+    public java.util.Iterator<dric.proto.CameraInfoResponse> getCameraAll(
         marmot.proto.VoidProto request) {
       return blockingServerStreamingCall(
           getChannel(), getGetCameraAllMethod(), getCallOptions(), request);
@@ -375,7 +375,7 @@ public final class DrICVideoServerGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<dric.proto.CameraInfo> getCamera(
+    public com.google.common.util.concurrent.ListenableFuture<dric.proto.CameraInfoResponse> getCamera(
         marmot.proto.StringProto request) {
       return futureUnaryCall(
           getChannel().newCall(getGetCameraMethod(), getCallOptions()), request);
@@ -414,11 +414,11 @@ public final class DrICVideoServerGrpc {
           break;
         case METHODID_GET_CAMERA:
           serviceImpl.getCamera((marmot.proto.StringProto) request,
-              (io.grpc.stub.StreamObserver<dric.proto.CameraInfo>) responseObserver);
+              (io.grpc.stub.StreamObserver<dric.proto.CameraInfoResponse>) responseObserver);
           break;
         case METHODID_GET_CAMERA_ALL:
           serviceImpl.getCameraAll((marmot.proto.VoidProto) request,
-              (io.grpc.stub.StreamObserver<dric.proto.CameraInfo>) responseObserver);
+              (io.grpc.stub.StreamObserver<dric.proto.CameraInfoResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();

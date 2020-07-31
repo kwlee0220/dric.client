@@ -1,6 +1,7 @@
 package dric.command;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import dric.DrICClient;
 import dric.proto.EndPoint;
@@ -15,13 +16,16 @@ public class DrICClientLoader {
 	
 	private String m_host = "localhost";
 	private int m_port = DEFAULT_PLATFORM_PORT;
+
+	@Option(names={"--client"}, paramLabel="id", description={"DrICClient client id"})
+	private String m_clientId = UUID.randomUUID().toString();
 	
 	public DrICClient load() throws IOException {
 		EndPoint ep = EndPoint.newBuilder()
 							.setHost(m_host)
 							.setPort(m_port)
 							.build();
-		return DrICClient.connect(ep);
+		return DrICClient.connect(ep, m_clientId);
 	}
 
 	@Option(names={"-h", "--host"}, paramLabel="ip_addr",

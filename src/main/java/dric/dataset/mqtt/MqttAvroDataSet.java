@@ -1,4 +1,4 @@
-package dric.topic.mqtt;
+package dric.dataset.mqtt;
 
 import org.apache.avro.Schema;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
@@ -20,15 +20,17 @@ import marmot.dataset.DataSetInfo;
 public class MqttAvroDataSet extends AbstractDataSet {
 	private final String m_brokerHost;
 	private final int m_brokerPort;
+	private final String m_clientId;
 	private final String m_topicName;
 	private final RecordSchema m_schema;
 	private final Schema m_avroSchema;
 	
-	public MqttAvroDataSet(DataSetInfo dsInfo, String host, int port, String topicName) {
+	public MqttAvroDataSet(DataSetInfo dsInfo, String host, int port, String clientId, String topicName) {
 		super(dsInfo);
 		
 		m_brokerHost = host;
 		m_brokerPort = port;
+		m_clientId = clientId;
 		m_topicName = topicName;
 		m_schema = dsInfo.getRecordSchema();
 		m_avroSchema = AvroUtils.toSchema(m_schema);
@@ -41,12 +43,14 @@ public class MqttAvroDataSet extends AbstractDataSet {
 
 	@Override
 	public RecordStream read() {
-		return new MqttAvroRecordReader(m_brokerHost, m_brokerPort, m_topicName, m_schema, m_avroSchema).read();
+		return new MqttAvroRecordReader(m_brokerHost, m_brokerPort, m_clientId, m_topicName,
+										m_schema, m_avroSchema).read();
 	}
 
 	@Override
 	public long write(RecordStream stream) {
-		return new MqttAvroRecordWriter(m_brokerHost, m_brokerPort, m_topicName, m_avroSchema).write(stream);
+		return new MqttAvroRecordWriter(m_brokerHost, m_brokerPort, m_clientId, m_topicName, m_schema,
+										m_avroSchema).write(stream);
 	}
 	
 	public static IMqttClient openMqttSession(String host, int port, String topic) {

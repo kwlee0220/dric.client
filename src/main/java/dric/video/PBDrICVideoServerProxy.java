@@ -1,11 +1,13 @@
 package dric.video;
 
 import dric.proto.CameraInfo;
+import dric.proto.CameraInfoResponse;
 import dric.proto.DrICVideoServerGrpc;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerBlockingStub;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerStub;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
+import utils.Throwables;
 import utils.grpc.PBUtils;
 import utils.stream.FStream;
 
@@ -33,7 +35,7 @@ public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 	@Override
 	public CameraInfo getCamera(String cameraId) throws CameraNotFoundException, DrICVideoException {
 		try {
-			return m_blockingStub.getCamera(PBUtils.STRING(cameraId));
+			return handle(m_blockingStub.getCamera(PBUtils.STRING(cameraId)));
 		}
 		catch ( StatusRuntimeException e ) {
 			switch ( e.getStatus().getCode() ) {
@@ -49,17 +51,8 @@ public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 
 	@Override
 	public FStream<CameraInfo> getCameraAll() throws DrICVideoException {
-		try {
-			return FStream.from(m_blockingStub.getCameraAll(PBUtils.VOID()));
-		}
-		catch ( StatusRuntimeException e ) {
-			switch ( e.getStatus().getCode() ) {
-				case INTERNAL:
-					throw new DrICVideoException(e.getStatus().getDescription());
-				default:
-					throw new AssertionError("" + e);
-			}
-		}
+		return FStream.from(m_blockingStub.getCameraAll(PBUtils.VOID()))
+						.map(this::handle);
 	}
 
 	@Override
@@ -91,6 +84,17 @@ public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 				default:
 					throw new AssertionError("" + e);
 			}
+		}
+	}
+	
+	private CameraInfo handle(CameraInfoResponse resp) {
+		switch ( resp.getEitherCase() ) {
+			case CAMERA_INFO:
+				return resp.getCameraInfo();
+			case ERROR:
+				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
+			default:
+				throw new AssertionError();
 		}
 	}
 }

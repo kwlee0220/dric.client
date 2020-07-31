@@ -59,8 +59,8 @@ service DrICDataStore {
 service DrICVideoServer {
 	rpc addCamera(CameraInfo) returns (marmot.proto.VoidResponse);
 	rpc removeCamera(marmot.proto.StringProto) returns (marmot.proto.VoidResponse);
-	rpc getCamera(marmot.proto.StringProto) returns (CameraInfo);
-	rpc getCameraAll(marmot.proto.VoidProto) returns (stream CameraInfo);
+	rpc getCamera(marmot.proto.StringProto) returns (CameraInfoResponse);
+	rpc getCameraAll(marmot.proto.VoidProto) returns (stream CameraInfoResponse);
 	
 //	rpc getCameraFrame(CameraFrameRequest) returns (CameraFrameResponse);
 //	rpc queryCameraFrames(CameraFrameRangeRequest) returns (stream CameraFrameResponse);
@@ -69,6 +69,12 @@ service DrICVideoServer {
 message CameraInfo {
 	string id = 1;
 	string rtsp_url = 2;
+}
+message CameraInfoResponse {
+	oneof either {
+		CameraInfo camera_info = 1;
+		marmot.proto.ErrorProto error = 2;
+	}
 }
 
 
