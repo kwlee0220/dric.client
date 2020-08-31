@@ -30,6 +30,21 @@ public final class Dric {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_dric_proto_JdbcEndPoint_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_dric_proto_VideoStream_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_dric_proto_VideoStream_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_dric_proto_PlaybackStreamRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_dric_proto_PlaybackStreamRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_dric_proto_VideoStreamResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_dric_proto_VideoStreamResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_dric_proto_CameraInfo_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -105,45 +120,53 @@ public final class Dric {
       "\0132\030.marmot.proto.ErrorProtoH\000B\010\n\006either\"" +
       "k\n\014JdbcEndPoint\022\016\n\006system\030\001 \001(\t\022\014\n\004host\030" +
       "\002 \001(\t\022\014\n\004port\030\003 \001(\005\022\017\n\007db_name\030\004 \001(\t\022\014\n\004" +
-      "user\030\005 \001(\t\022\020\n\010password\030\006 \001(\t\"*\n\nCameraIn" +
-      "fo\022\n\n\002id\030\001 \001(\t\022\020\n\010rtsp_url\030\002 \001(\t\"x\n\022Came" +
-      "raInfoResponse\022-\n\013camera_info\030\001 \001(\0132\026.dr" +
-      "ic.proto.CameraInfoH\000\022)\n\005error\030\002 \001(\0132\030.m" +
-      "armot.proto.ErrorProtoH\000B\010\n\006either\",\n\024Im" +
-      "ageCoordinateProto\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005" +
-      "\"\'\n\017CoordinateProto\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(" +
-      "\001\"n\n\020BoundingBoxProto\022,\n\002tl\030\001 \001(\0132 .dric" +
-      ".proto.ImageCoordinateProto\022,\n\002br\030\002 \001(\0132" +
-      " .dric.proto.ImageCoordinateProto\"@\n\020Cam" +
-      "eraFrameProto\022\021\n\tcamera_id\030\001 \001(\t\022\r\n\005imag" +
-      "e\030\002 \001(\014\022\n\n\002ts\030\003 \001(\003\"\226\001\n\024ObjectBBoxTrackP" +
-      "roto\022\021\n\tcamera_id\030\001 \001(\t\022\014\n\004luid\030\002 \001(\t\022\024\n" +
-      "\014object_class\030\003 \001(\t\022*\n\004bbox\030\004 \001(\0132\034.dric" +
-      ".proto.BoundingBoxProto\022\017\n\007heading\030\005 \001(\002" +
-      "\022\n\n\002ts\030\006 \001(\003\"\227\001\n\020ObjectTrackProto\022\021\n\tcam" +
-      "era_id\030\001 \001(\t\022\014\n\004luid\030\002 \001(\t\022\024\n\014object_cla" +
-      "ss\030\003 \001(\t\022/\n\ncoordinate\030\004 \001(\0132\033.dric.prot" +
-      "o.CoordinateProto\022\017\n\007azimuth\030\005 \001(\002\022\n\n\002ts" +
-      "\030\006 \001(\003\"9\n\rRotationProto\022\013\n\003yaw\030\001 \001(\001\022\r\n\005" +
-      "pitch\030\002 \001(\001\022\014\n\004roll\030\003 \001(\001\"3\n\022CameraFrame" +
-      "Request\022\021\n\tcamera_id\030\001 \001(\t\022\n\n\002ts\030\002 \001(\003\"y" +
-      "\n\023CameraFrameResponse\022-\n\005frame\030\001 \001(\0132\034.d" +
-      "ric.proto.CameraFrameProtoH\000\022)\n\005error\030\002 " +
-      "\001(\0132\030.marmot.proto.ErrorProtoH\000B\010\n\006eithe" +
-      "r\"O\n\027CameraFrameRangeRequest\022\021\n\tcamera_i" +
-      "d\030\001 \001(\t\022\020\n\010start_ts\030\002 \001(\003\022\017\n\007stop_ts\030\003 \001" +
-      "(\0032]\n\014DrICPlatform\022M\n\022getServiceEndPoint" +
-      "\022\031.marmot.proto.StringProto\032\034.dric.proto" +
-      ".EndPointResponse2\017\n\rDrICDataStore2\254\002\n\017D" +
-      "rICVideoServer\022?\n\taddCamera\022\026.dric.proto" +
-      ".CameraInfo\032\032.marmot.proto.VoidResponse\022" +
-      "E\n\014removeCamera\022\031.marmot.proto.StringPro" +
-      "to\032\032.marmot.proto.VoidResponse\022F\n\tgetCam" +
-      "era\022\031.marmot.proto.StringProto\032\036.dric.pr" +
-      "oto.CameraInfoResponse\022I\n\014getCameraAll\022\027" +
-      ".marmot.proto.VoidProto\032\036.dric.proto.Cam" +
-      "eraInfoResponse0\001B\016\n\ndric.protoP\001P\000b\006pro" +
-      "to3"
+      "user\030\005 \001(\t\022\020\n\010password\030\006 \001(\t\"2\n\013VideoStr" +
+      "eam\022\021\n\tcamera_id\030\001 \001(\t\022\020\n\010rtsp_url\030\002 \001(\t" +
+      "\"Q\n\025PlaybackStreamRequest\022\021\n\tcamera_id\030\001" +
+      " \001(\t\022\022\n\nstart_time\030\002 \001(\t\022\021\n\tstop_time\030\003 " +
+      "\001(\t\"z\n\023VideoStreamResponse\022.\n\013stream_inf" +
+      "o\030\001 \001(\0132\027.dric.proto.VideoStreamH\000\022)\n\005er" +
+      "ror\030\002 \001(\0132\030.marmot.proto.ErrorProtoH\000B\010\n" +
+      "\006either\"*\n\nCameraInfo\022\n\n\002id\030\001 \001(\t\022\020\n\010rts" +
+      "p_url\030\002 \001(\t\"x\n\022CameraInfoResponse\022-\n\013cam" +
+      "era_info\030\001 \001(\0132\026.dric.proto.CameraInfoH\000" +
+      "\022)\n\005error\030\002 \001(\0132\030.marmot.proto.ErrorProt" +
+      "oH\000B\010\n\006either\",\n\024ImageCoordinateProto\022\t\n" +
+      "\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"\'\n\017CoordinateProto\022\t" +
+      "\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\"n\n\020BoundingBoxProto" +
+      "\022,\n\002tl\030\001 \001(\0132 .dric.proto.ImageCoordinat" +
+      "eProto\022,\n\002br\030\002 \001(\0132 .dric.proto.ImageCoo" +
+      "rdinateProto\"@\n\020CameraFrameProto\022\021\n\tcame" +
+      "ra_id\030\001 \001(\t\022\r\n\005image\030\002 \001(\014\022\n\n\002ts\030\003 \001(\003\"\226" +
+      "\001\n\024ObjectBBoxTrackProto\022\021\n\tcamera_id\030\001 \001" +
+      "(\t\022\014\n\004luid\030\002 \001(\t\022\024\n\014object_class\030\003 \001(\t\022*" +
+      "\n\004bbox\030\004 \001(\0132\034.dric.proto.BoundingBoxPro" +
+      "to\022\017\n\007heading\030\005 \001(\002\022\n\n\002ts\030\006 \001(\003\"\227\001\n\020Obje" +
+      "ctTrackProto\022\021\n\tcamera_id\030\001 \001(\t\022\014\n\004luid\030" +
+      "\002 \001(\t\022\024\n\014object_class\030\003 \001(\t\022/\n\ncoordinat" +
+      "e\030\004 \001(\0132\033.dric.proto.CoordinateProto\022\017\n\007" +
+      "azimuth\030\005 \001(\002\022\n\n\002ts\030\006 \001(\003\"9\n\rRotationPro" +
+      "to\022\013\n\003yaw\030\001 \001(\001\022\r\n\005pitch\030\002 \001(\001\022\014\n\004roll\030\003" +
+      " \001(\001\"3\n\022CameraFrameRequest\022\021\n\tcamera_id\030" +
+      "\001 \001(\t\022\n\n\002ts\030\002 \001(\003\"y\n\023CameraFrameResponse" +
+      "\022-\n\005frame\030\001 \001(\0132\034.dric.proto.CameraFrame" +
+      "ProtoH\000\022)\n\005error\030\002 \001(\0132\030.marmot.proto.Er" +
+      "rorProtoH\000B\010\n\006either\"O\n\027CameraFrameRange" +
+      "Request\022\021\n\tcamera_id\030\001 \001(\t\022\020\n\010start_ts\030\002" +
+      " \001(\003\022\017\n\007stop_ts\030\003 \001(\0032]\n\014DrICPlatform\022M\n" +
+      "\022getServiceEndPoint\022\031.marmot.proto.Strin" +
+      "gProto\032\034.dric.proto.EndPointResponse2\017\n\r" +
+      "DrICDataStore2\205\003\n\017DrICVideoServer\022?\n\tadd" +
+      "Camera\022\026.dric.proto.CameraInfo\032\032.marmot." +
+      "proto.VoidResponse\022E\n\014removeCamera\022\031.mar" +
+      "mot.proto.StringProto\032\032.marmot.proto.Voi" +
+      "dResponse\022F\n\tgetCamera\022\031.marmot.proto.St" +
+      "ringProto\032\036.dric.proto.CameraInfoRespons" +
+      "e\022I\n\014getCameraAll\022\027.marmot.proto.VoidPro" +
+      "to\032\036.dric.proto.CameraInfoResponse0\001\022W\n\021" +
+      "getPlaybackStream\022!.dric.proto.PlaybackS" +
+      "treamRequest\032\037.dric.proto.VideoStreamRes" +
+      "ponseB\016\n\ndric.protoP\001P\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -168,74 +191,92 @@ public final class Dric {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_JdbcEndPoint_descriptor,
         new java.lang.String[] { "System", "Host", "Port", "DbName", "User", "Password", });
-    internal_static_dric_proto_CameraInfo_descriptor =
+    internal_static_dric_proto_VideoStream_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_dric_proto_VideoStream_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_dric_proto_VideoStream_descriptor,
+        new java.lang.String[] { "CameraId", "RtspUrl", });
+    internal_static_dric_proto_PlaybackStreamRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_dric_proto_PlaybackStreamRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_dric_proto_PlaybackStreamRequest_descriptor,
+        new java.lang.String[] { "CameraId", "StartTime", "StopTime", });
+    internal_static_dric_proto_VideoStreamResponse_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_dric_proto_VideoStreamResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_dric_proto_VideoStreamResponse_descriptor,
+        new java.lang.String[] { "StreamInfo", "Error", "Either", });
+    internal_static_dric_proto_CameraInfo_descriptor =
+      getDescriptor().getMessageTypes().get(6);
     internal_static_dric_proto_CameraInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CameraInfo_descriptor,
         new java.lang.String[] { "Id", "RtspUrl", });
     internal_static_dric_proto_CameraInfoResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_dric_proto_CameraInfoResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CameraInfoResponse_descriptor,
         new java.lang.String[] { "CameraInfo", "Error", "Either", });
     internal_static_dric_proto_ImageCoordinateProto_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_dric_proto_ImageCoordinateProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_ImageCoordinateProto_descriptor,
         new java.lang.String[] { "X", "Y", });
     internal_static_dric_proto_CoordinateProto_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_dric_proto_CoordinateProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CoordinateProto_descriptor,
         new java.lang.String[] { "X", "Y", });
     internal_static_dric_proto_BoundingBoxProto_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_dric_proto_BoundingBoxProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_BoundingBoxProto_descriptor,
         new java.lang.String[] { "Tl", "Br", });
     internal_static_dric_proto_CameraFrameProto_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_dric_proto_CameraFrameProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CameraFrameProto_descriptor,
         new java.lang.String[] { "CameraId", "Image", "Ts", });
     internal_static_dric_proto_ObjectBBoxTrackProto_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_dric_proto_ObjectBBoxTrackProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_ObjectBBoxTrackProto_descriptor,
         new java.lang.String[] { "CameraId", "Luid", "ObjectClass", "Bbox", "Heading", "Ts", });
     internal_static_dric_proto_ObjectTrackProto_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_dric_proto_ObjectTrackProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_ObjectTrackProto_descriptor,
         new java.lang.String[] { "CameraId", "Luid", "ObjectClass", "Coordinate", "Azimuth", "Ts", });
     internal_static_dric_proto_RotationProto_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_dric_proto_RotationProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_RotationProto_descriptor,
         new java.lang.String[] { "Yaw", "Pitch", "Roll", });
     internal_static_dric_proto_CameraFrameRequest_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_dric_proto_CameraFrameRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CameraFrameRequest_descriptor,
         new java.lang.String[] { "CameraId", "Ts", });
     internal_static_dric_proto_CameraFrameResponse_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_dric_proto_CameraFrameResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CameraFrameResponse_descriptor,
         new java.lang.String[] { "Frame", "Error", "Either", });
     internal_static_dric_proto_CameraFrameRangeRequest_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_dric_proto_CameraFrameRangeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dric_proto_CameraFrameRangeRequest_descriptor,

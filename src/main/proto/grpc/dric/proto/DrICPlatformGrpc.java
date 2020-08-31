@@ -18,7 +18,7 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 /**
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.23.1)",
+    value = "by gRPC proto compiler (version 1.16.1)",
     comments = "Source: dric.proto")
 public final class DrICPlatformGrpc {
 
@@ -41,21 +41,22 @@ public final class DrICPlatformGrpc {
     if ((getGetServiceEndPointMethod = DrICPlatformGrpc.getGetServiceEndPointMethod) == null) {
       synchronized (DrICPlatformGrpc.class) {
         if ((getGetServiceEndPointMethod = DrICPlatformGrpc.getGetServiceEndPointMethod) == null) {
-          DrICPlatformGrpc.getGetServiceEndPointMethod = getGetServiceEndPointMethod =
+          DrICPlatformGrpc.getGetServiceEndPointMethod = getGetServiceEndPointMethod = 
               io.grpc.MethodDescriptor.<marmot.proto.StringProto, dric.proto.EndPointResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getServiceEndPoint"))
+              .setFullMethodName(generateFullMethodName(
+                  "dric.proto.DrICPlatform", "getServiceEndPoint"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   marmot.proto.StringProto.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   dric.proto.EndPointResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new DrICPlatformMethodDescriptorSupplier("getServiceEndPoint"))
-              .build();
+                  .setSchemaDescriptor(new DrICPlatformMethodDescriptorSupplier("getServiceEndPoint"))
+                  .build();
+          }
         }
-      }
-    }
-    return getGetServiceEndPointMethod;
+     }
+     return getGetServiceEndPointMethod;
   }
 
   /**

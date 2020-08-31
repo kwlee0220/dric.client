@@ -5,6 +5,9 @@ import dric.proto.CameraInfoResponse;
 import dric.proto.DrICVideoServerGrpc;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerBlockingStub;
 import dric.proto.DrICVideoServerGrpc.DrICVideoServerStub;
+import dric.proto.PlaybackStreamRequest;
+import dric.proto.VideoStream;
+import dric.proto.VideoStreamResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import utils.Throwables;
@@ -56,6 +59,23 @@ public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 	}
 
 	@Override
+	public VideoStream getPlaybackStream(PlaybackStreamRequest req) throws CameraNotFoundException, DrICVideoException {
+		try {
+			return handle(m_blockingStub.getPlaybackStream(req));
+		}
+		catch ( StatusRuntimeException e ) {
+			switch ( e.getStatus().getCode() ) {
+				case NOT_FOUND:
+					throw new CameraNotFoundException(req.getCameraId());
+				case INTERNAL:
+					throw new DrICVideoException(e.getStatus().getDescription());
+				default:
+					throw new AssertionError("" + e);
+			}
+		}
+	}
+
+	@Override
 	public void addCamera(CameraInfo info) throws CameraExistsException, DrICVideoException {
 		try {
 			m_blockingStub.addCamera(info);
@@ -84,6 +104,17 @@ public class PBDrICVideoServerProxy implements DrICVideoServer, AutoCloseable {
 				default:
 					throw new AssertionError("" + e);
 			}
+		}
+	}
+	
+	private VideoStream handle(VideoStreamResponse resp) {
+		switch ( resp.getEitherCase() ) {
+			case STREAM_INFO:
+				return resp.getStreamInfo();
+			case ERROR:
+				throw Throwables.toRuntimeException(PBUtils.toException(resp.getError()));
+			default:
+				throw new AssertionError();
 		}
 	}
 	
